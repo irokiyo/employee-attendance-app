@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -17,4 +18,16 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/staff/list', [AttendanceController::class, 'adminStaffIndex'])->name('admin.staff.index'); //スタッフ一覧画面（管理者）
     Route::get('/admin/attendance/staff/{id}', [AttendanceController::class, 'adminStaffShow'])->name('admin.attendance.show'); //スタッフ別勤怠一覧画面（管理者）
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceController::class, 'adminRequestShow'])->name('admin.request.show'); //修正申請承認画面（管理者）
+});
+
+
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', fn () => view('auth.login'))->name('login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+});
+Route::middleware('guest:admin')->group(function () {
+    Route::get('/admin/login', fn () => view('admin.login'))->name('admin.login');
+    Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])
+        ->middleware('fortify.guard:admin');
 });

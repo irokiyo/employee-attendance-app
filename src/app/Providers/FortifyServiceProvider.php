@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use Laravel\Fortify\Contracts\VerifyEmailResponse;
+
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -20,7 +25,34 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(RegisterResponse::class, function () {
+            return new class implements RegisterResponse {
+                public function toResponse($request)
+                {
+                    return redirect('/email/verify');
+                }
+            };
+        });
+
+        $this->app->singleton(VerifyEmailResponse::class, function () {
+            return new class implements VerifyEmailResponse {
+                public function toResponse($request)
+                {
+                    return redirect('/mypage/profile');
+                }
+            };
+        });
+
+        $this->app->singleton(LoginResponse::class, function () {
+            return new class implements LoginResponse {
+                public function toResponse($request)
+                {
+                    return $request->is('admin/*')
+                    ? redirect()->intended('/admin/attendance/list')
+                    : redirect()->intended('/attendance');
+                }
+            };
+        });
     }
 
     /**
@@ -45,5 +77,21 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = User::where('email', $request->email)->first();
+
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+            return null;
+            }
+
+    // 管理者ログインの時だけ status をチェック
+            if ($request->input('login_type') === 'admin') {
+            return $user->status === 'admin' ? $user : null;
+            }
+
+    // 通常ユーザーならOK（必要なら user の status 制限をここで）
+            return $user;
+});
     }
 }
