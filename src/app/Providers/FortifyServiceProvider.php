@@ -7,6 +7,8 @@ use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Cache\RateLimiting\Limit;
+use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -38,7 +40,7 @@ class FortifyServiceProvider extends ServiceProvider
             return new class implements VerifyEmailResponse {
                 public function toResponse($request)
                 {
-                    return redirect('/mypage/profile');
+                    return redirect('/attendance');
                 }
             };
         });
@@ -67,6 +69,9 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::loginView(function () {
         return view('user.auth.login');
         });
+        Fortify::registerView(function () {
+        return view('user.auth.register');
+        });
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
@@ -85,13 +90,13 @@ class FortifyServiceProvider extends ServiceProvider
             return null;
             }
 
-    // 管理者ログインの時だけ status をチェック
             if ($request->input('login_type') === 'admin') {
             return $user->status === 'admin' ? $user : null;
             }
 
-    // 通常ユーザーならOK（必要なら user の status 制限をここで）
             return $user;
-});
+        });
+
+        $this->app->bind(FortifyLoginRequest::class, LoginRequest::class);
     }
 }

@@ -96,6 +96,11 @@ body {
     font-size: 12px;
     margin-top: 3px;
     }
+/* 各ページのタイトル部分 */
+.page__title{
+    
+    }
+
 
 @media (max-width: 768px) {
     .nav__item {

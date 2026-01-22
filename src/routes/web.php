@@ -23,7 +23,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn () => view('auth.login'))->name('login');
+    Route::get('/login', fn () => view('user.auth.login'))->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 });
 Route::middleware('guest:admin')->group(function () {
