@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\BreakTime;
+
 
 class AttendanceController extends Controller
 {
@@ -22,6 +24,10 @@ class AttendanceController extends Controller
             ->whereDate('date', today())
             ->first();
 
+        $latestBreak = $attendance ? $attendance->breaks()->latest('id')->first(): null;
+
+        $isBreak = $latestBreak && is_null($latestBreak->break_end_time);
+
         if ($request->isMethod('post')) {
             $action = $request->input('action');
 
@@ -33,22 +39,31 @@ class AttendanceController extends Controller
             }
 
             if ($action === 'break_start' && $attendance && !$attendance->end_time) {
-                session(['is_break' => true]);
+                if (!$isBreak) {
+                    BreakTime::create([
+                    'attendance_id' => $attendance->id,
+                    'break_start_time' => now()->format('H:i:s'),
+                    ]);
+                }
+            }
+
+            if ($action === 'break_end' && $attendance) {
+                if ($isBreak) {
+                    $latestBreak->update([
+                    'break_end_time' => now()->format('H:i:s'),
+                    ]);
+                }
             }
 
             if ($action === 'end' && $attendance && !$attendance->end_time) {
-                session()->forget('is_break');
+                if ($isBreak) {
+                    $latestBreak->update(['break_end_time' => now()->format('H:i:s')]);
+                }
                 $attendance->update(['end_time' => now()->format('H:i:s')]);
-            }
-
-            if ($action === 'break_end') {
-                session()->forget('is_break');
             }
 
             return redirect()->route('user.attendance');
         }
-
-        $isBreak = (bool) session('is_break', false);
 
         if (!$attendance) {
             $status = 'outside';
