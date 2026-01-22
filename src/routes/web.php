@@ -7,6 +7,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'userAttendance'])->name('user.attendance'); //出勤登録画面（一般ユーザー）
+    Route::post('/attendance', [AttendanceController::class, 'userAttendance'])->name('user.attendance'); //出勤登録（一般ユーザー）
     Route::get('/attendance/list', [AttendanceController::class, 'userIndex'])->name('user.index'); //勤怠一覧画面（一般ユーザー）
     Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestIndex'])->name('request.index'); //申請一覧画面（管理者）（一般ユーザー）
     Route::get('/attendance/detail/{id}', [AttendanceController::class, 'userDetail'])->name('user.detail'); //勤怠詳細画面（一般ユーザー）
