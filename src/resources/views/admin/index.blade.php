@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/sanitize.css') }}" />
-<link rel="stylesheet" href="{{ asset('css/purchase.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/index.css') }}" />
 @endsection
 
 @section('header')
@@ -26,7 +25,7 @@
                 <span class="date-character">{{ $displayDate }}</span>
             </div>
 
-            <a class="next-day" href="{{ route('admin.index', ['date' => $nextDate]) }}"><img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow"></a>
+            <a class="next-day" href="{{ route('admin.index', ['date' => $nextDate]) }}"><img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow-right"></a>
             <p class="date-character">翌日</p>
         </div>
 
