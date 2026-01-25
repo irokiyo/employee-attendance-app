@@ -16,7 +16,7 @@
 
         <div class="month-nav">
             <div class="prev-month">
-                <a class="month-nav__btn" href="{{ route('user.index', ['month' => $prevMonth]) }}">
+                <a class="month__btn" href="{{ route('user.index', ['month' => $prevMonth]) }}">
                     <img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow">
                 </a>
                 <p class="date-character">前月</p>
@@ -28,20 +28,18 @@
                         <img src="{{ asset('/images/カレンダー.png') }}" alt="カレンダー" class="calendar">
                         <input type="month" name="month" value="{{ request('month', now()->format('Y-m')) }}" class="month-input" onchange="this.form.submit()">
                     </label>
-
                 </form>
-                <span class="month-nav__label">{{ $currentMonthLabel }}</span>
+                <p class="month-nav__label">{{ $currentMonthLabel }}</p>
             </div>
 
             <div class="next-month">
                 <p class="date-character">翌月</p>
-                <a class="month-nav__btn" href="{{ route('user.index', ['month' => $nextMonth]) }}">
+                <a class="month__btn" href="{{ route('user.index', ['month' => $nextMonth]) }}">
                     <img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow-right">
                 </a>
             </div>
         </div>
 
-        {{-- テーブル --}}
         <div class="attendance-table">
             <table class="table">
                 <tr class="table__row">
@@ -61,7 +59,7 @@
                     <td class="table__item">{{ $attendance->total_break_time ?? '' }}</td>
                     <td class="table__item">{{ $attendance->total_time}}</td>
                     <td class="table__item">
-                        <a class="detail-link" href="">
+                        <a class="detail-link" href="{{route('user.detail',['id' => $attendance->id])}}">
                             詳細
                         </a>
                     </td>

@@ -113,7 +113,6 @@ class AttendanceController extends Controller
 
             return $a;
             });
-            
 
         return view('user.index',[
             'attendances' =>$attendances,
@@ -121,5 +120,29 @@ class AttendanceController extends Controller
             'prevMonth' =>$prevMonth,
             'nextMonth' =>$nextMonth,
         ]);
+    }
+    //勤怠詳細画面（一般ユーザー）
+    public function userDetail($id){
+        $userId = auth()->id();
+        $attendance = Attendance::with('breaks')
+            ->where('user_id', $userId)
+            ->findOrFail($id);
+
+        $date = $attendance->date ? Carbon::parse($attendance->date) : null;
+        $attendance->year_label = $date ? $date->format('Y年') : '';
+        $attendance->md_label  = $date ? $date->format('n月j日') : '';
+        $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
+        $attendance->end_label  = $attendance->end_time   ? Carbon::parse($attendance->end_time)->format('H:i')   : '';
+        $attendance->breaks->each(function ($break) {
+        $break->start_label = $break->break_start_time
+            ? Carbon::parse($break->break_start_time)->format('H:i')
+            : '';
+
+        $break->end_label = $break->break_end_time
+            ? Carbon::parse($break->break_end_time)->format('H:i')
+            : '';
+        });
+
+        return view('user.detail',compact('attendance'));
     }
 }
