@@ -7,6 +7,7 @@
 
         <form action="{{route('logout')}}" method="post">
             @csrf
+            <input type="hidden" name="logout_type" value="admin">
             <button type="submit" class="logout">ログアウト</button>
         </form>
         </li>

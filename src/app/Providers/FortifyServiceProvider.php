@@ -8,6 +8,7 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Cache\RateLimiting\Limit;
 use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
+use Laravel\Fortify\Contracts\LogoutResponse;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -49,9 +50,19 @@ class FortifyServiceProvider extends ServiceProvider
             return new class implements LoginResponse {
                 public function toResponse($request)
                 {
-                    return $request->is('admin/*')
+                    return $request->input('login_type') === 'admin'
                     ? redirect()->intended('/admin/attendance/list')
                     : redirect()->intended('/attendance');
+                }
+            };
+        });
+        $this->app->singleton(LogoutResponse::class, function () {
+            return new class implements LogoutResponse {
+                public function toResponse($request)
+                {
+                    return $request->input('logout_type') === 'admin'
+                        ? redirect('/admin/login')
+                        : redirect()->route('login');
                 }
             };
         });
@@ -98,5 +109,6 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(FortifyLoginRequest::class, LoginRequest::class);
+
     }
 }

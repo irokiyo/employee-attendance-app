@@ -2,12 +2,12 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}" />
-<link rel="stylesheet" href="{{ asset('css/login.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/user/auth/login.css') }}" />
 @endsection
 
 @section('content')
-<div class="login-container">
-    <div class="login-card">
+<div class="container">
+    <div class="card">
         <h2 class="title">ログイン</h2>
 
         <form action="{{route('login')}}" method="POST" class="login-form">

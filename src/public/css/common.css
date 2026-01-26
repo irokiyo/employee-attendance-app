@@ -72,11 +72,11 @@ body {
 }
 .btn{
     width: 100%;
-    background-color: #FF5555;
+    background-color: #000000;
     color: #FFFFFF;
     border: none;
     padding: 12px;
-    border-radius: 3px;
+    border-radius: 5px;
     font-size: 26px;
     cursor: pointer;
     margin-top: 80px;
@@ -103,6 +103,34 @@ body {
     font-size: 12px;
     margin-top: 3px;
     }
+/* fortify画面の共通部分 */
+label {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    display: block;
+    text-align: left;
+    width: 100%;
+}
+
+input {
+    height: 59px;
+    width: 100%;
+    margin-top: 10px;
+}
+.container{
+    display: flex;
+    justify-content: center;
+}
+.card{
+    background-color: #FFFFFF;
+    padding: 40px 60px;
+    border-radius: 4px;
+    text-align: center;
+    justify-content: center;
+    width: 60%;
+}
+
 /* 各ページ共通部分 */
 .page__title{
     font-size: 30px;
@@ -260,5 +288,10 @@ body {
     border: none;
     margin-right: 20px;
     font-size: 13px;
+    }
+    .card {
+        width: 90%;
+        max-width: none;
+        padding: 30px 20px;
     }
 }

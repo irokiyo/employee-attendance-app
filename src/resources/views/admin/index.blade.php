@@ -5,7 +5,7 @@
 @endsection
 
 @section('header')
-@include('partials.header')
+@include('partials.admin-header')
 @endsection
 
 @section('content')
@@ -13,16 +13,25 @@
     <div class="attendance-page__inner">
 
         <h1 class="page__title">
-            {{ $titleDate }}の勤怠
+            {{ $currentMonthLabel }}の勤怠
         </h1>
 
         <div class="date-menu">
-            <a class="previous-day" href="{{ route('admin.index', ['date' => $prevDate]) }}"><img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow"></a>
-            <p class="date-character">前日</p>
+            <div class="prev-month">
+                <a class="month__btn" href="{{ route('admin.index', ['month' => $prevDate]) }}">
+                    <img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow">
+                </a>
+                <p class="date-character">前日</p>
+            </div>
 
-            <div class="select-date">
-                <input class="date-nav__icon" aria-hidden="true"><img src="{{ asset('/images/左矢印.png') }}" alt="カレンダー" class="calendar"></input>
-                <span class="date-character">{{ $displayDate }}</span>
+            <div class="month-nav__center">
+                <form action="{{ route('admin.index') }}" method="GET" class="month-form">
+                    <label class="month-picker">
+                        <img src="{{ asset('/images/カレンダー.png') }}" alt="カレンダー" class="calendar">
+                        <input type="month" name="month" value="{{ request('month', now()->format('Y-m-d')) }}" class="month-input" onchange="this.form.submit()">
+                    </label>
+                </form>
+                <p class="month-nav__label">{{ $currentMonthLabel }}</p>
             </div>
 
             <a class="next-day" href="{{ route('admin.index', ['date' => $nextDate]) }}"><img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow-right"></a>

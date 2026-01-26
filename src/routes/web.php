@@ -28,8 +28,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', fn () => view('user.auth.login'))->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 });
-Route::middleware('guest:admin')->group(function () {
+Route::middleware('guest')->group(function () {
     Route::get('/admin/login', fn () => view('admin.login'))->name('admin.login');
-    Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])
-        ->middleware('fortify.guard:admin');
+});
+
+Route::get('/', function () {
+    return redirect()->route('login');
 });

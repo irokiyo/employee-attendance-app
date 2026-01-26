@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/sanitize.css') }}" />
-<link rel="stylesheet" href="{{ asset('css/login.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/admin/login.css') }}" />
 @endsection
 
 @section('content')
-<div class="login-container">
-    <div class="login-card">
+<div class="container">
+    <div class="card">
         <h2 class="title">管理者ログイン</h2>
 
-        <form action="{{route('admin.login')}}" method="POST" class="login-form">
+        <form action="{{route('login')}}" method="POST" class="login-form">
             @csrf
             <div class="form-group">
+                <input type="hidden" name="login_type" value="admin">
                 <label for="email">メールアドレス</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}">
                 @error('email')

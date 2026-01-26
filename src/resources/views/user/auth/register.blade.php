@@ -1,13 +1,12 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/sanitize.css') }}" />
-<link rel="stylesheet" href="{{ asset('css/register.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/user/auth/register.css') }}" />
 @endsection
 
 @section('content')
-<div class="register-container">
-    <div class="register-card">
+<div class="container">
+    <div class="card">
         <h2 class="title">会員登録</h2>
 
         <form action="{{route('register')}}" method="POST" class="register-form" novalidate>
