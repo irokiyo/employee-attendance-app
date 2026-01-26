@@ -11,6 +11,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance/list', [AttendanceController::class, 'userIndex'])->name('user.index'); //勤怠一覧画面（一般ユーザー）
     Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestIndex'])->name('request.index'); //申請一覧画面（管理者）（一般ユーザー）
     Route::get('/attendance/detail/{id}', [AttendanceController::class, 'userDetail'])->name('user.detail'); //勤怠詳細画面（一般ユーザー）
+    Route::post('/attendance/detail/{id}', [AttendanceController::class, 'userRequest'])->name('user.request'); //勤怠詳細の修正登録（一般ユーザー）
 });
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {

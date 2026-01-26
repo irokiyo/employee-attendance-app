@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use App\Models\AttendanceRequest;
+use App\Http\Requests\AttendanceRequestRequest;
 
 
 class AttendanceController extends Controller
@@ -144,5 +146,53 @@ class AttendanceController extends Controller
         });
 
         return view('user.detail',compact('attendance'));
+    }
+    //勤怠詳細の修正登録（一般ユーザー
+    public function userRequest(AttendanceRequestRequest $request, $id){
+        $data = $request->validated();
+
+        $start = !empty($data['start_time'])
+        ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
+        : null;
+        $end = !empty($data['end_time'])
+        ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
+        : null;
+        $breaksPayload = [];
+        if (!empty($data['breaks']) && is_array($data['breaks'])) {
+            foreach ($data['breaks'] as $b) {
+                $breaksPayload[] = [
+                    'break_id' => $b['break_id'] ?? null,
+                    'start' => !empty($b['start'])
+                        ? Carbon::createFromFormat('H:i', $b['start'])->format('H:i:s')
+                        : null,
+                    'end' => !empty($b['end'])
+                        ? Carbon::createFromFormat('H:i', $b['end'])->format('H:i:s')
+                        : null,
+                ];
+            }
+        }
+
+        $payload = [
+            'start_time' => $start,
+            'end_time'   => $end,
+            'breaks'     => $data['breaks'] ?? [],
+        ];
+
+        AttendanceRequest::create([
+            'user_id' => auth()->id(),
+            'attendance_id'=> $id,
+            'break_id'=> null,
+            'status'=> 'pending',
+            'payload'=> $payload,
+            'reason' => $request->reason,
+            'reviewed_by'=> null,
+            'reviewed_at'=> null,
+        ]);
+
+        return redirect()->route('request.index');
+    }
+    //勤怠詳細の修正登録（一般ユーザー
+    public function requestIndex(){
+        return view('user.request-list');
     }
 }
