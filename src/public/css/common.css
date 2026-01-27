@@ -146,9 +146,17 @@ input {
 }
 
 /* 管理者とユーザーの勤怠一覧 */
-.month-nav{
+.attendance-list {
+    min-height: calc(100vh - 80px);
+    background: #f2f2f2;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 48px 16px;
+}
+
+.attendance-list__inner {
+    width: 100%;
+    max-width: 760px;
 }
 .month__btn{
     appearance: none;
@@ -165,10 +173,9 @@ input {
     width: 20px;
     pointer-events: none;
 }
-.month-nav {
+.attendance-nav {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
     margin-bottom: 12px;
     background-color: #fff;
     border-radius: 10px;
@@ -189,7 +196,7 @@ input {
 .month__btn:hover {
     opacity: 0.85;
 }
-.month-nav__label{
+.attendance-nav__label{
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -233,7 +240,7 @@ input {
 }
 
 .date-character{
-    width: 40%;
+    width: 20%;
     color: #737373;
     font-weight: bold;
     font-size: 16px;

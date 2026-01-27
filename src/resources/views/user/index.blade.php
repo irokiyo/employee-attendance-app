@@ -14,7 +14,7 @@
 
         <h2 class="page__title">勤怠一覧</h2>
 
-        <div class="month-nav">
+        <div class="attendance-nav">
             <div class="prev-month">
                 <a class="month__btn" href="{{ route('user.index', ['month' => $prevMonth]) }}">
                     <img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow">
@@ -29,7 +29,7 @@
                         <input type="month" name="month" value="{{ request('month', now()->format('Y-m')) }}" class="month-input" onchange="this.form.submit()">
                     </label>
                 </form>
-                <p class="month-nav__label">{{ $currentMonthLabel }}</p>
+                <p class="attendance-nav__label">{{ $currentMonthLabel }}</p>
             </div>
 
             <div class="next-month">

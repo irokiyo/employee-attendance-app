@@ -16,26 +16,38 @@ class AttendanceController extends Controller
     //勤怠一覧画面(管理者)
     public function adminIndex(Request $request)
     {
-        $userId = auth()->id();
+        $carbon = isset($date) ? Carbon::parse($date) : Carbon::today();
 
-        $day = $request->input('month', now()->format('Y-m-d'));
+        $day = $request->input('date', now()->toDateString());
         $current = Carbon::createFromFormat('Y-m-d', $day);
+        $displayTitle = $carbon->format('Y年n月j日');
 
-        $start = $current->copy()->startOfMonth();
-        $end = $current->copy()->endOfMonth();
+        $prevDate = $current->copy()->toDateString();
+        $nextDate = $current->copy()->toDateString();
 
-        $prevDate = $current->copy()->subMonth()->format('Y-m-d');
-        $nextDate = $current->copy()->addMonth()->format('Y-m-d');
-
-        $attendances = Attendance::query()->where('user_id', $userId)
-            ->where('user_id', $userId)
-            ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
-            ->orderBy('date')
+        $attendances = Attendance::query()
+            ->with(['user', 'breaks'])
+            ->whereDate('date', $current->toDateString())
+            ->orderBy('user_id')
             ->get();
+        $attendances->each(function ($attendance) {
+            $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
+            $attendance->end_label  = $attendance->end_time   ? Carbon::parse($attendance->end_time)->format('H:i')   : '';
+            $attendance->breaks->each(function ($break) {
+            $break->start_label = $break->break_start_time
+            ? Carbon::parse($break->break_start_time)->format('H:i')
+            : '';
+
+            $break->end_label = $break->break_end_time
+            ? Carbon::parse($break->break_end_time)->format('H:i')
+            : '';
+            });
+        });
 
         return view('admin.index',[
             'attendances' =>$attendances,
-            'currentMonthLabel' => $current ->format('Y年n月'),
+            'displayTitle' => $displayTitle,
+            'currentDate' => $current->toDateString(),
             'prevDate' =>$prevDate,
             'nextDate' =>$nextDate,
         ]);
