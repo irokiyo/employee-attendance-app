@@ -59,6 +59,43 @@ class AttendanceController extends Controller
 
         return view('admin.detail.staff.index',compact('users'));
     }
+    //スタッフ別勤怠一覧画面（管理者）
+    public function adminStaffShow(Request $request,$id){
+
+        $user = User::findOrFail($id);
+        $month = $request->input('month', now()->format('Y-m'));
+        $current = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+
+        $start = $current->copy()->startOfMonth();
+        $end = $current->copy()->endOfMonth();
+
+        $prevMonth = $current->copy()->subMonth()->format('Y-m');
+        $nextMonth = $current->copy()->addMonth()->format('Y-m');
+
+        $weekdays = ['日','月','火','水','木','金','土'];
+
+        $attendances = Attendance::query()->where('user_id', $id)
+            ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+            ->orderBy('date')
+            ->get()
+            ->map(function ($a) use ($weekdays) {
+            $d = Carbon::parse($a->date);
+            $a->date_label = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
+
+            $a->start_label = $a->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
+            $a->end_label   = $a->end_time   ? Carbon::parse($a->end_time)->format('H:i')   : '';
+
+            return $a;
+            });
+
+        return view('admin.detail.staff.show',[
+            'attendances' =>$attendances,
+            'currentMonthLabel' => $current ->format('Y年n月'),
+            'prevMonth' =>$prevMonth,
+            'nextMonth' =>$nextMonth,
+            'user' => $user
+        ]);
+    }
 
     //勤務登録画面(一般ユーザー)
     public function userAttendance(Request $request)

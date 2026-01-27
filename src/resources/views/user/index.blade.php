@@ -59,7 +59,7 @@
                     <td class="table__item">{{ $attendance->total_break_time ?? '' }}</td>
                     <td class="table__item">{{ $attendance->total_time}}</td>
                     <td class="table__item">
-                        <a class="detail-link" href="{{route('user.detail',['id' => $attendance->id])}}">
+                        <a class="detail-link" href="{{route('user.detail',['id' => $user->id])}}">
                             詳細
                         </a>
                     </td>

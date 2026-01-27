@@ -24,7 +24,7 @@
                     <td class="table__item">{{ $user->name }}</td>
                     <td class="table__item">{{ $user->email }}</td>
                     <td class="table__item">
-                        <a class="detail-link" href="">
+                        <a class="detail-link" href="{{route('admin.attendance.show',['id' => $user->id])}}">
                             詳細
                         </a>
                     </td>
