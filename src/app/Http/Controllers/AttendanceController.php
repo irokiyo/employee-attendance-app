@@ -52,6 +52,14 @@ class AttendanceController extends Controller
             'nextDate' =>$nextDate,
         ]);
     }
+    //スタッフ一覧画面（管理者）
+    public function adminStaffIndex(){
+
+        $users = User::query()->get();
+
+        return view('admin.detail.staff.index',compact('users'));
+    }
+
     //勤務登録画面(一般ユーザー)
     public function userAttendance(Request $request)
     {
