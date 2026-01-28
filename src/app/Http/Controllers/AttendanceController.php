@@ -160,7 +160,7 @@ class AttendanceController extends Controller
         return view('user.attendance', [
             'attendance' => $attendance,
             'status' => $status,
-            'date' => today()->format('Y年n月j日(D)'),
+            'date' => Carbon::today()->locale('ja')->isoFormat('YYYY年M月D日(ddd)'),
             'time' => now()->format('H:i'),
         ]);
     }
@@ -180,7 +180,7 @@ class AttendanceController extends Controller
 
         $weekdays = ['日','月','火','水','木','金','土'];
 
-        $attendances = Attendance::query()->where('user_id', $userId)
+        $attendances = Attendance::query()
             ->where('user_id', $userId)
             ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
             ->orderBy('date')

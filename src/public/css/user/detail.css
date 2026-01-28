@@ -5,7 +5,7 @@
     box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
     padding: 0;
     overflow: hidden;
-    max-width: 720px;
+    width: 50%;
     margin: 0 auto;
 }
 

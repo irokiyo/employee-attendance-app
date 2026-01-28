@@ -28,14 +28,14 @@
         <div class="attendance-actions">
 
             @if($status === 'outside')
-            <button type="submit" name="action" value="start" class="btn-black">出勤</button>
+            <button type="submit" name="action" value="start" class="attendance__btn">出勤</button>
 
             @elseif($status === 'working')
-            <button type="submit" name="action" value="end" class="btn-black">退勤</button>
-            <button type="submit" name="action" value="break_start" class="btn-white">休憩入</button>
+            <button type="submit" name="action" value="end" class="attendance__btn">退勤</button>
+            <button type="submit" name="action" value="break_start" class="break__btn">休憩入</button>
 
             @elseif($status === 'break')
-            <button type="submit" name="action" value="break_end" class="btn-white">休憩戻</button>
+            <button type="submit" name="action" value="break_end" class="break__btn">休憩戻</button>
 
             @elseif($status === 'finished')
             <p class="attendance-message">お疲れ様でした。</p>

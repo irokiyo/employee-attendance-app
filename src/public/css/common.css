@@ -138,7 +138,6 @@ input {
     padding-left: 20px;
 }
 .attendance-list {
-    min-height: calc(100vh - 80px);
     background: #f2f2f2;
     display: flex;
     justify-content: center;
@@ -155,8 +154,7 @@ input {
 }
 
 .attendance-list__inner {
-    width: 100%;
-    max-width: 760px;
+    width: 50%;
 }
 .month__btn{
     appearance: none;

@@ -107,6 +107,9 @@ class FortifyServiceProvider extends ServiceProvider
 
             return $user;
         });
+        Fortify::verifyEmailView(function () {
+            return view('user.auth.verify-email');
+        });
 
         $this->app->bind(FortifyLoginRequest::class, LoginRequest::class);
 

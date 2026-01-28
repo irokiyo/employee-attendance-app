@@ -1,4 +1,4 @@
-.content {
+.attendance {
     min-height: calc(100vh - 80px);
     background: #f2f2f2;
     display: flex;
@@ -10,7 +10,7 @@
 .status-label {
     background: #d9d9d9;
     padding: 6px 14px;
-    border-radius: 12px;
+    border-radius: 50px;
     font-size: 12px;
     margin-bottom: 24px;
 }
@@ -39,16 +39,29 @@
     cursor: pointer;
 }
 
-.btn-black {
+.attendance__btn {
     background: #000;
     color: #fff;
     border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 140px;
+    height: 44px;
+    font-weight: bold;
 }
 
-.btn-white {
+.break__btn {
     background: #fff;
     color: #000;
     border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 140px;
+    height: 44px;
+    font-weight: bold;
+    border: none;
 }
 
 .attendance-message {
