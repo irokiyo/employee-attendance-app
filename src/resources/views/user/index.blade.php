@@ -51,17 +51,19 @@
                     <th class="table__header">詳細</th>
                 </tr>
 
-                @foreach($attendances as $attendance)
+                @foreach($rows as $row)
                 <tr>
-                    <td class="table__item">{{ $attendance->date_label}}</td>
-                    <td class="table__item">{{ $attendance->start_label}}</td>
-                    <td class="table__item">{{ $attendance->end_label}}</td>
-                    <td class="table__item">{{ $attendance->total_break_time ?? '' }}</td>
-                    <td class="table__item">{{ $attendance->total_time}}</td>
+                    <td class="table__item">{{ $row['date_label'] }}</td>
+                    <td class="table__item">{{ $row['start_label']}}</td>
+                    <td class="table__item">{{ $row['end_label']}}</td>
+                    <td class="table__item">{{ $row['total_break_time'] }}</td>
+                    <td class="table__item">{{ $row['total_time']}}</td>
                     <td class="table__item">
-                        <a class="detail-link" href="{{route('user.detail',['id' => $attendance->id])}}">
+                    @if($row['attendance_id'])
+                        <a class="detail-link" href="{{route('user.detail',['id' => $row['attendance_id']])}}">
                             詳細
                         </a>
+                    @endif
                     </td>
                 </tr>
                 @endforeach

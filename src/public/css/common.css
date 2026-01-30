@@ -142,16 +142,10 @@ input {
     display: flex;
     justify-content: center;
     padding: 48px 16px;
+    min-height: calc(100vh - 80px);
 }
 
 /* 管理者とユーザーの勤怠一覧 */
-.attendance-list {
-    min-height: calc(100vh - 80px);
-    background: #f2f2f2;
-    display: flex;
-    justify-content: center;
-    padding: 48px 16px;
-}
 
 .attendance-list__inner {
     width: 50%;
@@ -174,7 +168,7 @@ input {
 .attendance-nav {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 30px;
     background-color: #fff;
     border-radius: 10px;
 }
@@ -229,6 +223,7 @@ input {
     background: transparent;
     width: 100%;
     z-index: 2;
+    height: 100%;
 }
 .calendar{
     width: 100%;
@@ -255,11 +250,15 @@ input {
     border-collapse: collapse;
     table-layout: fixed;
 }
+.table__row{
+    background: #fff;
+    margin-bottom: 100px;
+}
 .table__header {
-    background: #fafafa;
+    background: #FFFFFF;
     font-size: 12px;
-    font-weight: 700;
-    color: #111;
+    font-weight: bold;
+    color: #737373;
     padding: 10px 8px;
     border-bottom: 1px solid #e6e6e6;
 }
@@ -267,7 +266,8 @@ input {
     text-align: left;
     padding-left: 14px;
     font-size: 12px;
-    color: #111;
+    font-weight: bold;
+    color: #737373;
     padding: 10px 8px;
     text-align: center;
     border-bottom: 1px solid #efefef;

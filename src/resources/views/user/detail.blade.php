@@ -16,10 +16,11 @@
 
         <form action="{{route('user.request',['id' => $attendance->id])}}" method="POST" class="request-form">
             @csrf
+        <input type="hidden" name="attendance_id" value="{{ $attendance->id }}">
             <div class="card">
                 <div class="table">
                     <div class="row">
-                        <div class="cell head">名前</div>
+                        <div class="row__head">名前</div>
                         <div class="cell value">
                             <span class="text--bold">{{ $attendance->user->name}}</span>
                         </div>
@@ -36,10 +37,11 @@
                     <div class="row">
                         <div class="cell head">出勤・退勤</div>
                         <div class="cell value time">
-                            <input type="text" class="input input--time" value="{{ $attendance->start_label}}">
+                            <input type="text" class="input input--time" name="start_time" value="{{ $attendance->start_label}}">
                             <span class="time__sep">〜</span>
-                            <input type="text" class="input input--time" value="{{ $attendance->end_label}}">
+                            <input type="text" class="input input--time" name="end_time" value="{{ $attendance->end_label}}">
                         </div>
+                        @error('start_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
 
                     @forelse ($attendance->breaks as $i => $break)
@@ -48,11 +50,14 @@
                             休憩{{ $i === 0 ? '' : $i + 1 }}
                         </div>
                         <div class="cell value time">
-                            <input type="text" class="input input--time" value="{{ $break->start_label }}">
+                            <input type="hidden" name="breaks[{{ $i }}][break_id]" value="{{ $break->id }}">
+                            <input type="text" class="input input--time" name="breaks[{{ $i }}][break_start_time]" value="{{ $break->start_label }}">
                             <span class="time__sep">〜</span>
-                            <input type="text" class="input input--time" value="{{ $break->end_label }}">
+                            <input type="text" class="input input--time" name="breaks[{{ $i }}][break_end_time]" value="{{ $break->end_label }}">
                         </div>
+                        @error("breaks.$i.break_start_time") <p class="error-message">{{ $message }}</p> @enderror
                     </div>
+
                     @empty
                     <div class="row">
                         <div class="cell head">休憩</div>
@@ -61,6 +66,9 @@
                             <span class="time__sep">〜</span>
                             <input type="text" class="input input--time" value="">
                         </div>
+                        @error('reason')
+                        <p class="error-message">{{ $message }}</p>
+                        @enderror
                     </div>
                     @endforelse
 

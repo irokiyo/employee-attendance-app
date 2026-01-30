@@ -1,11 +1,17 @@
+.page{
+    width: 50%;
+}
+.request-form{
+    width: 100%;
 
+}
 .card {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
     padding: 0;
     overflow: hidden;
-    width: 50%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -15,7 +21,7 @@
 
 .row {
     display: grid;
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 250px 1fr;
     border-bottom: 1px solid #e6e6e6;
 }
 
@@ -27,11 +33,12 @@
     padding: 18px 18px;
 }
 
-.cell.head {
+.row__head {
     color: #666;
     font-size: 13px;
     display: flex;
     align-items: center;
+    padding: 50px 40px;
 }
 
 .cell.value {
@@ -109,3 +116,17 @@
     opacity: 0.9;
 }
 
+@media (max-width: 768px) {
+    .cell.head {
+    color: #666;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    padding: 25px 20px;
+    }
+    .cell.value {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    }
+}

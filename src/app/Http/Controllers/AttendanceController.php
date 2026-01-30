@@ -195,9 +195,26 @@ class AttendanceController extends Controller
             return $a;
             });
 
+        $attendanceByDate = $attendances->keyBy(fn($a) => Carbon::parse($a->date)->toDateString());
+
+        $rows = collect();
+        for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
+            $dateStr = $d->toDateString();
+            $a = $attendanceByDate->get($dateStr);
+
+            $rows->push([
+                'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
+                'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
+                'end_label'   => $a?->end_time   ? Carbon::parse($a->end_time)->format('H:i')   : '',
+                'total_break_time' => $a->total_break_time ?? '',
+                'total_time' => $a->total_time ?? '',
+                'attendance_id' => $a->id ?? null,
+            ]);
+        }
+
         return view('user.index',[
-            'attendances' =>$attendances,
-            'currentMonthLabel' => $current ->format('Y年n月'),
+            'rows' => $rows,
+            'currentMonthLabel' => $current ->format('Y/m'),
             'prevMonth' =>$prevMonth,
             'nextMonth' =>$nextMonth,
         ]);
@@ -239,13 +256,20 @@ class AttendanceController extends Controller
         $breaksPayload = [];
         if (!empty($data['breaks']) && is_array($data['breaks'])) {
             foreach ($data['breaks'] as $b) {
+                $bs = $b['break_start_time'] ?? null;
+                $be = $b['break_end_time'] ?? null;
+
+                if (empty($bs) && empty($be)) {
+                    continue;
+                }
+
                 $breaksPayload[] = [
                     'break_id' => $b['break_id'] ?? null,
-                    'start' => !empty($b['start'])
-                        ? Carbon::createFromFormat('H:i', $b['start'])->format('H:i:s')
+                    'break_start_time' => !empty($bs)
+                        ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s')
                         : null,
-                    'end' => !empty($b['end'])
-                        ? Carbon::createFromFormat('H:i', $b['end'])->format('H:i:s')
+                    'break_end_time' => !empty($be)
+                        ? Carbon::createFromFormat('H:i', $be)->format('H:i:s')
                         : null,
                 ];
             }
@@ -254,7 +278,7 @@ class AttendanceController extends Controller
         $payload = [
             'start_time' => $start,
             'end_time'   => $end,
-            'breaks'     => $data['breaks'] ?? [],
+            'breaks'     => $breaksPayload,
         ];
 
         AttendanceRequest::create([
@@ -263,14 +287,14 @@ class AttendanceController extends Controller
             'break_id'=> null,
             'status'=> 'pending',
             'payload'=> $payload,
-            'reason' => $request->reason,
+            'reason' => $data['reason'],
             'reviewed_by'=> null,
             'reviewed_at'=> null,
         ]);
 
         return redirect()->route('request.index');
     }
-    //勤怠詳細の修正登録（一般ユーザー
+    //申請一覧画面（管理者）（一般ユーザー）
     public function requestIndex(){
         return view('user.request-list');
     }
