@@ -296,6 +296,34 @@ class AttendanceController extends Controller
     }
     //申請一覧画面（管理者）（一般ユーザー）
     public function requestIndex(){
-        return view('user.request-list');
+        $user = auth()->user();
+
+        if ($user->status =='admin'){
+            return view('admin.request.index');
+        }
+
+
+        if ($user->status =='user'){
+            $userId = auth()->id();
+
+            $reqs = AttendanceRequest::with(['user' , 'attendance'])
+                ->where('user_id' , $userId)
+                ->latest()
+                ->get()
+                ->map(function($r){
+                    $r->status_label = match ($r->status){
+                        'pending'=> '承認待ち',
+                        'approved'=> '承認済み',
+                        'rejected' =>'却下',
+                        default => '不明',
+                    };
+                    $r->attendance_time = $r->attendance->date ? Carbon::parse($r->attendance->date)->format('Y/m/d') : '';
+                    $r->request_time = $r->created_at ? Carbon::parse($r->created_at)->format('Y/m/d') : '';
+
+                return $r;
+                });
+
+            return view('user.request-list',compact('reqs'));
+        }
     }
 }
