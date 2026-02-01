@@ -1,4 +1,4 @@
-<nav class="header__nav">
+<nav class="admin-header__nav">
     <ul class="header__nav__ul">
         <li>
         <li class="nav__link"><a href="{{route('admin.index')}}" class="nav__btn">勤怠一覧</li>
@@ -8,7 +8,8 @@
         <form action="{{route('logout')}}" method="post">
             @csrf
             <input type="hidden" name="logout_type" value="admin">
-            <button type="submit" class="logout">ログアウト</button>
+            <button type="submit" class="nav__btn logout">ログアウト</button>
+
         </form>
         </li>
     </ul>

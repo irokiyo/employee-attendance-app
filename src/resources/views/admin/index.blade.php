@@ -10,16 +10,16 @@
 
 @section('content')
 <div class="attendance-list">
-    <div class="attendance-page__inner">
+    <div class="attendance-list__inner">
 
         <h1 class="page__title">
-            {{ $displayTitle }}の勤怠
+            {{ $currentDate }}の勤怠
 
         </h1>
 
         <div class="attendance-nav">
             <div class="prev-month">
-                <a class="month__btn" href="{{ route('admin.index', ['month' => $prevDate]) }}">
+                <a class="month__btn" href="{{ route('admin.index', ['date' => $prevDate]) }}">
                     <img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow">
                 </a>
                 <p class="date-character">前日</p>
@@ -32,11 +32,14 @@
                         <input type="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" class="month-input" onchange="this.form.submit()">
                     </label>
                 </form>
-                <p class="attendance-nav__label">{{ $displayTitle }}</p>
+                <p class="attendance-nav__label">{{ $currentDate }}</p>
             </div>
 
-            <a class="next-day" href="{{ route('admin.index', ['date' => $nextDate]) }}"><img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow-right"></a>
-            <p class="date-character">翌日</p>
+            <div class="next-month">
+                <p class="date-character">翌日</p>
+                <a class="month__btn" href="{{ route('admin.index', ['date' => $nextDate]) }}"><img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow-right">
+                </a>
+            </div>
         </div>
 
         <div class="attendance-table">
@@ -50,8 +53,8 @@
                     <th class="table__header">詳細</th>
                 </tr>
 
-                <tr class="table__row">
                 @foreach($attendances as $attendance)
+                <tr>
                     <td class="table__item">{{ $attendance->user->name }}</td>
                     <td class="table__item">{{ $attendance->start_label }}</td>
                     <td class="table__item">{{ $attendance->end_label }}</td>

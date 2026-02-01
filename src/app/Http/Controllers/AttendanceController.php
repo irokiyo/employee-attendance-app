@@ -16,14 +16,11 @@ class AttendanceController extends Controller
     //勤怠一覧画面(管理者)
     public function adminIndex(Request $request)
     {
-        $carbon = isset($date) ? Carbon::parse($date) : Carbon::today();
-
         $day = $request->input('date', now()->toDateString());
         $current = Carbon::createFromFormat('Y-m-d', $day);
-        $displayTitle = $carbon->format('Y年n月j日');
 
-        $prevDate = $current->copy()->toDateString();
-        $nextDate = $current->copy()->toDateString();
+        $prevDate = $current->copy()->subDay()->format('Y-m-d');
+        $nextDate = $current->copy()->addDay()->format('Y-m-d');
 
         $attendances = Attendance::query()
             ->with(['user', 'breaks'])
@@ -46,8 +43,7 @@ class AttendanceController extends Controller
 
         return view('admin.index',[
             'attendances' =>$attendances,
-            'displayTitle' => $displayTitle,
-            'currentDate' => $current->toDateString(),
+            'currentDate' => $current->format('Y年n月j日'),
             'prevDate' =>$prevDate,
             'nextDate' =>$nextDate,
         ]);

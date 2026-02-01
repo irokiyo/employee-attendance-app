@@ -7,3 +7,12 @@
 .detail-link:hover {
     text-decoration: underline;
 }
+
+.attendance-list__inner {
+    width: 100%;
+    max-width: 760px;
+}
+.month-nav__center {
+    display: flex;
+    justify-content: center;
+}
