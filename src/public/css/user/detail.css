@@ -1,6 +1,4 @@
-.page{
-    width: 50%;
-}
+
 .request-form{
     width: 100%;
 
@@ -22,7 +20,7 @@
 .row {
     display: grid;
     grid-template-columns: 250px 1fr;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 3px solid #e6e6e6;
 }
 
 .row--last {
@@ -30,20 +28,23 @@
 }
 
 .cell {
-    padding: 18px 18px;
+    padding: 18px 200px 18px 18px;
 }
 
 .row__head {
     color: #666;
-    font-size: 13px;
+    font-size: 16px;
     display: flex;
     align-items: center;
-    padding: 50px 40px;
+    padding: 30px 40px;
+    font-weight: bold;
 }
 
 .cell.value {
     display: flex;
     align-items: center;
+    text-align: center;
+    justify-content: center;
     gap: 18px;
 }
 
@@ -66,19 +67,19 @@
     border: 1px solid #dcdcdc;
     border-radius: 4px;
     background: #fff;
-    padding: 0 8px;
     font-size: 13px;
     outline: none;
 }
 
 .input--time {
-    width: 70px;
     text-align: center;
 }
 
 .time__sep {
-    color: #666;
+    color: black;
     font-weight: 700;
+    text-align: center;
+    padding-top: 10px;
 }
 
 .textarea {

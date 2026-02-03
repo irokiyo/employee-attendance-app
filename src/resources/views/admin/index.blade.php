@@ -14,7 +14,6 @@
 
         <h1 class="page__title">
             {{ $currentDate }}の勤怠
-
         </h1>
 
         <div class="attendance-nav">
@@ -61,7 +60,7 @@
                     <td class="table__item">{{ $attendance->total_break_time ?? '' }}</td>
                     <td class="table__item">{{ $attendance->total_time }}</td>
                     <td class="table__item">
-                        <a class="detail-link" href="{{route('user.detail',['id' => $attendance->id])}}">
+                        <a class="detail-link" href="{{route('admin.detail',['id' => $attendance->id])}}">
                             詳細
                         </a>
                     </td>

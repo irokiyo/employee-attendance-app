@@ -20,9 +20,6 @@ body {
 .header__nav{
     width: 30%;
 }
-.header__nav{
-    width: 30%;
-}
 .admin-header__nav{
     width: 35%;
 }
@@ -30,7 +27,16 @@ body {
     display: flex;
     align-items: center;
 }
-
+.nav__link{
+    color: #FFFFFF;
+    font-size: 16px;
+    margin-right: 30px;
+    list-style: none;
+    line-height: 1;
+    background-color: none;
+    text-decoration: none;
+    align-items: center;
+}
 .nav__link{
     color: #FFFFFF;
     font-size: 16px;
@@ -295,6 +301,9 @@ input {
 
 @media (max-width: 768px) {
     .header__nav{
+        width: 45%;
+    }
+    .admin-header__nav{
         width: 45%;
     }
     .nav__link{

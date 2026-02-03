@@ -17,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/attendance/list', [AttendanceController::class, 'adminIndex'])->name('admin.index'); //勤怠一覧画面（管理者）
     Route::get('/admin/attendance/{id}', [AttendanceController::class, 'adminDetail'])->name('admin.detail'); //勤怠詳細画面（管理者）
+    Route::post('/admin/attendance/{id}', [AttendanceController::class, 'adminDetailSave'])->name('admin.detail.save'); //勤怠詳細修正登録（管理者）
     Route::get('/admin/staff/list', [AttendanceController::class, 'adminStaffIndex'])->name('admin.staff.index'); //スタッフ一覧画面（管理者）
     Route::get('/admin/attendance/staff/{id}', [AttendanceController::class, 'adminStaffShow'])->name('admin.attendance.show'); //スタッフ別勤怠一覧画面（管理者）
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceController::class, 'adminRequestShow'])->name('admin.request.show'); //修正申請承認画面（管理者）

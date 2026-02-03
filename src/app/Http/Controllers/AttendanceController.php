@@ -47,7 +47,81 @@ class AttendanceController extends Controller
             'prevDate' =>$prevDate,
             'nextDate' =>$nextDate,
         ]);
+
     }
+    //勤怠詳細画面（管理者）
+    public function adminDetail($id){
+        $attendance = Attendance::with(['user','breaks'])->findOrFail($id);
+
+        $date = $attendance->date ? Carbon::parse($attendance->date) : null;
+        $attendance->year_label = $date ? $date->format('Y年') : '';
+        $attendance->md_label  = $date ? $date->format('n月j日') : '';
+        $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
+        $attendance->end_label  = $attendance->end_time   ? Carbon::parse($attendance->end_time)->format('H:i')   : '';
+        $attendance->breaks->each(function ($break) {
+        $break->start_label = $break->break_start_time
+            ? Carbon::parse($break->break_start_time)->format('H:i')
+            : '';
+
+        $break->end_label = $break->break_end_time
+            ? Carbon::parse($break->break_end_time)->format('H:i')
+            : '';
+        });
+
+        return view('admin.detail.show', compact('attendance'));
+    }
+    //勤怠詳細修正登録（管理者）
+    public function adminDetailSave(AttendanceRequestRequest $request, $id){
+        $data = $request->validated();
+
+        $start = !empty($data['start_time'])
+        ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
+        : null;
+        $end = !empty($data['end_time'])
+        ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
+        : null;
+        $breaksPayload = [];
+        if (!empty($data['breaks']) && is_array($data['breaks'])) {
+            foreach ($data['breaks'] as $b) {
+                $bs = $b['break_start_time'] ?? null;
+                $be = $b['break_end_time'] ?? null;
+
+                if (empty($bs) && empty($be)) {
+                    continue;
+                }
+
+                $breaksPayload[] = [
+                    'break_id' => $b['break_id'] ?? null,
+                    'break_start_time' => !empty($bs)
+                        ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s')
+                        : null,
+                    'break_end_time' => !empty($be)
+                        ? Carbon::createFromFormat('H:i', $be)->format('H:i:s')
+                        : null,
+                ];
+            }
+        }
+
+        $payload = [
+            'start_time' => $start,
+            'end_time'   => $end,
+            'breaks'     => $breaksPayload,
+        ];
+
+        AttendanceRequest::create([
+            'user_id' => auth()->id(),
+            'attendance_id'=> $id,
+            'break_id'=> null,
+            'status'=> 'pending',
+            'payload'=> $payload,
+            'reason' => $data['reason'],
+            'reviewed_by'=> null,
+            'reviewed_at'=> null,
+        ]);
+
+        return redirect()->route('request.index');
+    }
+
     //スタッフ一覧画面（管理者）
     public function adminStaffIndex(){
 

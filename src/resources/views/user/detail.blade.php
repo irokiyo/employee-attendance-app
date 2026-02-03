@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="cell head">日付</div>
+                        <div class="row__head">日付</div>
                         <div class="cell value date">
                             <span class="date__item text--bold">{{ $attendance->year_label}}</span>
                             <span class="date__item text--bold">{{ $attendance->md_label}}</span>
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="cell head">出勤・退勤</div>
+                        <div class="row__head">出勤・退勤</div>
                         <div class="cell value time">
                             <input type="text" class="input input--time" name="start_time" value="{{ $attendance->start_label}}">
                             <span class="time__sep">〜</span>
@@ -46,7 +46,7 @@
 
                     @forelse ($attendance->breaks as $i => $break)
                     <div class="row">
-                        <div class="cell head">
+                        <div class="row__head">
                             休憩{{ $i === 0 ? '' : $i + 1 }}
                         </div>
                         <div class="cell value time">
@@ -60,7 +60,7 @@
 
                     @empty
                     <div class="row">
-                        <div class="cell head">休憩</div>
+                        <div class="row__head">休憩</div>
                         <div class="cell value time">
                             <input type="text" class="input input--time" value="">
                             <span class="time__sep">〜</span>
@@ -73,7 +73,7 @@
                     @endforelse
 
                     <div class="row row--last">
-                        <div class="cell head">備考</div>
+                        <div class="row__head">備考</div>
                         <div class="cell value">
                             <input type="text" class="input" name="reason", value="{{ old('reason') }}">
                         </div>
