@@ -311,7 +311,51 @@ class AttendanceController extends Controller
             : '';
         });
 
-        return view('user.detail',compact('attendance'));
+        $attendanceRequest = AttendanceRequest::where('attendance_id', $attendance->id)
+        ->where('user_id', $userId)
+        ->latest()
+        ->first();
+
+        $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
+
+        $payload = $attendanceRequest->payload ?? [];
+            $reqStart = $payload['start_time'] ?? '';
+            $reqEnd   = $payload['end_time'] ?? '';
+        
+        $reqStart = !empty($payload['start_time'])
+            ? Carbon::parse($payload['start_time'])->format('H:i')
+            : '';
+
+        $reqEnd = !empty($payload['end_time'])
+            ? Carbon::parse($payload['end_time'])->format('H:i')
+            : '';
+
+        $rawBreaks = [];
+            if (isset($payload['break']) && is_array($payload['break'])) {
+                $rawBreaks = [$payload['break']];
+            }
+            elseif (isset($payload['breaks']) && is_array($payload['breaks'])) {
+                $rawBreaks = $payload['breaks'];
+            }
+        $reqBreaks = collect($rawBreaks)->map(function ($break) {
+            return [
+                'break_start_time' => !empty($break['break_start_time'])
+                ? Carbon::parse($break['break_start_time'])->format('H:i')
+                : '',
+                'break_end_time' => !empty($break['break_end_time'])
+                ? Carbon::parse($break['break_end_time'])->format('H:i')
+                : '',
+            ];
+        })->toArray();
+
+        return view('user.detail', compact(
+            'attendance',
+            'attendanceRequest',
+            'isPending',
+            'reqStart',
+            'reqEnd',
+            'reqBreaks'
+        ));
     }
     //勤怠詳細の修正登録（一般ユーザー
     public function userRequest(AttendanceRequestRequest $request, $id){
@@ -369,7 +413,24 @@ class AttendanceController extends Controller
         $user = auth()->user();
 
         if ($user->status =='admin'){
-            return view('admin.request.index');
+
+            $reqs = AttendanceRequest::with(['user' , 'attendance'])
+                ->latest()
+                ->get()
+                ->map(function($r){
+                    $r->status_label = match ($r->status){
+                        'pending'=> '承認待ち',
+                        'approved'=> '承認済み',
+                        'rejected' =>'却下',
+                        default => '不明',
+                    };
+                    $r->attendance_time = $r->attendance->date ? Carbon::parse($r->attendance->date)->format('Y/m/d') : '';
+                    $r->request_time = $r->created_at ? Carbon::parse($r->created_at)->format('Y/m/d') : '';
+
+                return $r;
+                });
+
+            return view('admin.detail.request.index',compact('reqs'));
         }
 
 

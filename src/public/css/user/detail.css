@@ -117,6 +117,13 @@
     opacity: 0.9;
 }
 
+.time-character{
+    font-weight: bolder;
+}
+.reason-character{
+    font-weight: bolder;
+}
+
 @media (max-width: 768px) {
     .cell.head {
     color: #666;
