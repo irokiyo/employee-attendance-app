@@ -409,52 +409,36 @@ class AttendanceController extends Controller
         return redirect()->route('request.index');
     }
     //申請一覧画面（管理者）（一般ユーザー）
-    public function requestIndex(){
+    public function requestIndex(Request $request){
         $user = auth()->user();
-
-        if ($user->status =='admin'){
-
-            $reqs = AttendanceRequest::with(['user' , 'attendance'])
-                ->latest()
-                ->get()
-                ->map(function($r){
-                    $r->status_label = match ($r->status){
-                        'pending'=> '承認待ち',
-                        'approved'=> '承認済み',
-                        'rejected' =>'却下',
-                        default => '不明',
-                    };
-                    $r->attendance_time = $r->attendance->date ? Carbon::parse($r->attendance->date)->format('Y/m/d') : '';
-                    $r->request_time = $r->created_at ? Carbon::parse($r->created_at)->format('Y/m/d') : '';
-
-                return $r;
-                });
-
-            return view('admin.detail.request.index',compact('reqs'));
-        }
-
+        $status = $request->query('status', 'pending');
+        $query = AttendanceRequest::with(['user', 'attendance'])
+            ->latest();
 
         if ($user->status =='user'){
-            $userId = auth()->id();
+            $query->where('user_id', $user->id);
+        }
 
-            $reqs = AttendanceRequest::with(['user' , 'attendance'])
-                ->where('user_id' , $userId)
-                ->latest()
-                ->get()
-                ->map(function($r){
-                    $r->status_label = match ($r->status){
-                        'pending'=> '承認待ち',
-                        'approved'=> '承認済み',
-                        'rejected' =>'却下',
-                        default => '不明',
-                    };
-                    $r->attendance_time = $r->attendance->date ? Carbon::parse($r->attendance->date)->format('Y/m/d') : '';
-                    $r->request_time = $r->created_at ? Carbon::parse($r->created_at)->format('Y/m/d') : '';
+        $query->where('status', $status);
+        $reqs = $query->get();
+
+        $reqs->transform(function ($r) {
+            $r->status_label = match ($r->status) {
+                'pending'  => '承認待ち',
+                'approved' => '承認済み',
+                'rejected' => '却下',
+                default    => '不明',
+            };
+                $r->attendance_time = $r->attendance->date ? Carbon::parse($r->attendance->date)->format('Y/m/d') : '';
+                $r->request_time = $r->created_at ? Carbon::parse($r->created_at)->format('Y/m/d') : '';
 
                 return $r;
-                });
+        });
 
-            return view('user.request-list',compact('reqs'));
+        if ($user->status === 'admin') {
+            return view('admin.detail.request.index', compact('reqs', 'status'));
         }
+
+            return view('user.request-list',compact('reqs', 'status'));
     }
 }

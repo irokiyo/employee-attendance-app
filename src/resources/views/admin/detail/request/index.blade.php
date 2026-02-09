@@ -15,6 +15,15 @@
 
         <h2 class="page__title">申請一覧</h2>
 
+        <div class="tab">
+            <a class="tab--label {{ $status==='pending' ? 'is-active' : '' }}" href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}">
+                承認待ち
+            </a>
+            <a class="tab--label {{ $status==='approved' ? 'is-active' : '' }}" href="{{ request()->fullUrlWithQuery(['status' => 'approved']) }}">
+                承認済み
+            </a>
+        </div>
+
         <div class="attendance-table">
             <table class="table">
                 <tr class="table__row">
@@ -44,8 +53,5 @@
         </div>
     </div>
 </div>
-
-
-
 @endsection
 
