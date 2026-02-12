@@ -144,22 +144,30 @@ class AttendanceController extends Controller
 
         $weekdays = ['日','月','火','水','木','金','土'];
 
-        $attendances = Attendance::query()->where('user_id', $id)
+        $attendances = Attendance::query()
+            ->where('user_id', $id)
             ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
             ->orderBy('date')
-            ->get()
-            ->map(function ($a) use ($weekdays) {
-            $d = Carbon::parse($a->date);
-            $a->date_label = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
+            ->get();
 
-            $a->start_label = $a->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
-            $a->end_label   = $a->end_time   ? Carbon::parse($a->end_time)->format('H:i')   : '';
+        $attendanceByDate = $attendances->keyBy(fn ($a) => Carbon::parse($a->date)->toDateString());
+        $rows = collect();
+        for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
+            $dateStr = $d->toDateString();
+            $a = $attendanceByDate->get($dateStr);
 
-            return $a;
-            });
+            $rows->push([
+                'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
+                'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
+                'end_label'   => $a?->end_time   ? Carbon::parse($a->end_time)->format('H:i')   : '',
+                'total_break_time' => $a?->total_break_time ?? '',
+                'total_time'       => $a?->total_time ?? '',
+                'attendance_id'    => $a?->id ?? null,
+            ]);
+        }
 
         return view('admin.detail.staff.show',[
-            'attendances' =>$attendances,
+            'rows' => $rows,
             'currentMonthLabel' => $current ->format('Y年n月'),
             'prevMonth' =>$prevMonth,
             'nextMonth' =>$nextMonth,
