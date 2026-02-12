@@ -21,6 +21,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/staff/list', [AttendanceController::class, 'adminStaffIndex'])->name('admin.staff.index'); //スタッフ一覧画面（管理者）
     Route::get('/admin/attendance/staff/{id}', [AttendanceController::class, 'adminStaffShow'])->name('admin.attendance.show'); //スタッフ別勤怠一覧画面（管理者）
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceController::class, 'adminRequestShow'])->name('admin.request.show'); //修正申請承認画面（管理者）
+    //修正申請更新（管理者）
+    Route::patch('/stamp_correction_request/approve/{attendance_correct_request_id}', [AttendanceController::class, 'adminRequestUpdate'])->name('request.update');
 });
 
 

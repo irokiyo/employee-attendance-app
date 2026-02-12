@@ -9,7 +9,7 @@ use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\AttendanceRequest;
 use App\Http\Requests\AttendanceRequestRequest;
-
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -321,7 +321,7 @@ class AttendanceController extends Controller
         $payload = $attendanceRequest->payload ?? [];
             $reqStart = $payload['start_time'] ?? '';
             $reqEnd   = $payload['end_time'] ?? '';
-        
+
         $reqStart = !empty($payload['start_time'])
             ? Carbon::parse($payload['start_time'])->format('H:i')
             : '';
@@ -440,5 +440,101 @@ class AttendanceController extends Controller
         }
 
             return view('user.request-list',compact('reqs', 'status'));
+    }
+     //修正申請承認画面（管理者）
+    public function adminRequestShow(Request $request, $attendance_correct_request_id){
+        $attendanceRequest = AttendanceRequest::with(['user', 'attendance.breaks'])
+            ->findOrFail($attendance_correct_request_id);
+        $attendance = $attendanceRequest->attendance;
+
+        $date = $attendance->date ? Carbon::parse($attendance->date) : null;
+        $attendance->year_label = $date ? $date->format('Y年') : '';
+        $attendance->md_label  = $date ? $date->format('n月j日') : '';
+        $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
+        $attendance->end_label  = $attendance->end_time   ? Carbon::parse($attendance->end_time)->format('H:i')   : '';
+        $attendance->breaks->each(function ($break) {
+        $break->start_label = $break->break_start_time
+            ? Carbon::parse($break->break_start_time)->format('H:i')
+            : '';
+
+        $break->end_label = $break->break_end_time
+            ? Carbon::parse($break->break_end_time)->format('H:i')
+            : '';
+        });
+
+        $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
+
+        $payload = $attendanceRequest->payload ?? [];
+            $reqStart = $payload['start_time'] ?? '';
+            $reqEnd   = $payload['end_time'] ?? '';
+
+        $reqStart = !empty($payload['start_time'])
+            ? Carbon::parse($payload['start_time'])->format('H:i')
+            : '';
+
+        $reqEnd = !empty($payload['end_time'])
+            ? Carbon::parse($payload['end_time'])->format('H:i')
+            : '';
+
+        $rawBreaks = [];
+            if (isset($payload['break']) && is_array($payload['break'])) {
+                $rawBreaks = [$payload['break']];
+            }
+            elseif (isset($payload['breaks']) && is_array($payload['breaks'])) {
+                $rawBreaks = $payload['breaks'];
+            }
+        $reqBreaks = collect($rawBreaks)->map(function ($break) {
+            return [
+                'break_start_time' => !empty($break['break_start_time'])
+                ? Carbon::parse($break['break_start_time'])->format('H:i')
+                : '',
+                'break_end_time' => !empty($break['break_end_time'])
+                ? Carbon::parse($break['break_end_time'])->format('H:i')
+                : '',
+            ];
+        })->toArray();
+
+        return view ('admin.detail.request.show',compact(
+            'attendance',
+            'attendanceRequest',
+            'isPending',
+            'reqStart',
+            'reqEnd',
+            'reqBreaks'
+        ));
+
+    }
+
+    //修正申請更新（管理者）
+    public function adminRequestUpdate(Request $request, $attendance_correct_request_id){
+        $reviewedBy = auth()->id();
+        $reviewedAt = now();
+        $req = AttendanceRequest::with(['attendance', 'attendance.breaks'])->findOrFail($attendance_correct_request_id);
+
+        DB::transaction(function () use ($req,$reviewedBy, $reviewedAt) {
+
+        $req->update([
+            'status'=> 'approved',
+            'reviewed_by'=> $reviewedBy,
+            'reviewed_at'=> $reviewedAt,
+        ]);
+
+        $payload = $req->payload ?? [];
+        $req->attendance->update([
+            'start_time' => $payload['start_time'] ?? $req->attendance->start_time,
+            'end_time'   => $payload['end_time']   ?? $req->attendance->end_time,
+        ]);
+        if (!empty($payload['breaks']) && is_array($payload['breaks'])) {
+            $req->attendance->breaks()->delete();
+
+            foreach ($payload['breaks'] as $b) {
+                $req->attendance->breaks()->create([
+                    'break_start_time' => $b['break_start_time'] ?? null,
+                    'break_end_time'   => $b['break_end_time'] ?? null,
+                ]);
+            }
+        }
+    });
+        return redirect()->route('request.index');
     }
 }

@@ -116,6 +116,18 @@
 .btn:hover {
     opacity: 0.9;
 }
+.btn-gray{
+    background: #696969;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    height: 40px;
+    width: 110px;
+    font-size: 14px;
+    font-weight: 800;
+    
+}
+
 
 .time-character{
     font-weight: bolder;

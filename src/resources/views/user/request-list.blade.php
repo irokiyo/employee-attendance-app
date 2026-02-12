@@ -5,7 +5,11 @@
 @endsection
 
 @section('header')
+@if(auth()->user()->status === 'admin')
+@include('partials.admin-header')
+@else
 @include('partials.user-header')
+@endif
 @endsection
 
 @section('content')
@@ -13,6 +17,16 @@
     <div class="attendance-list__inner">
 
         <h2 class="page__title">申請一覧</h2>
+
+        <div class="tab">
+            <a class="tab--label {{ $status==='pending' ? 'is-active' : '' }}" href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}">
+                承認待ち
+            </a>
+            <a class="tab--label {{ $status==='approved' ? 'is-active' : '' }}" href="{{ request()->fullUrlWithQuery(['status' => 'approved']) }}">
+                承認済み
+            </a>
+        </div>
+
 
         <div class="attendance-table">
             <table class="table">
@@ -33,9 +47,15 @@
                     <td class="table__item">{{ $req->reason }}</td>
                     <td class="table__item">{{ $req->request_time}}</td>
                     <td class="table__item">
-                        <a class="detail-link" href="{{route('user.detail', ['id' => $req->attendance->id])}}">
+                        @if(auth()->user()->status === 'admin')
+                        <a class="detail-link" href="{{ route('admin.request.show', ['attendance_correct_request_id' => $req->id]) }}">
                             詳細
                         </a>
+                        @else
+                        <a class="detail-link" href="{{ route('user.detail', ['id' => $req->attendance->id]) }}">
+                            詳細
+                        </a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

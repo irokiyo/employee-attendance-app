@@ -43,7 +43,7 @@
                     <td class="table__item">{{ $req->reason }}</td>
                     <td class="table__item">{{ $req->request_time}}</td>
                     <td class="table__item">
-                        <a class="detail-link" href="{{route('user.detail', ['id' => $req->attendance->id])}}">
+                        <a class="detail-link" href="{{route('admin.request.show',['attendance_correct_request_id' => $req->id])}}">
                             詳細
                         </a>
                     </td>
