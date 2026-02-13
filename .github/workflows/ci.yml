@@ -56,3 +56,14 @@ jobs:
         run: |
           cd src
           php artisan test
+
+      - name: Run Pint
+        run: |
+          cd src
+          ./vendor/bin/pint --test
+
+      - name: Run PHPStan
+        run: |
+          cd src
+          ./vendor/bin/phpstan analyse
+

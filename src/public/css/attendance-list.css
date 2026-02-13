@@ -35,3 +35,21 @@
     color: #666;
     text-align: center;
 }
+.detail-link {
+    color: #111;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.detail-link:hover {
+    text-decoration: underline;
+}
+
+.attendance-list__inner {
+    width: 100%;
+    max-width: 760px;
+}
+.month-nav__center {
+    display: flex;
+    justify-content: center;
+}
