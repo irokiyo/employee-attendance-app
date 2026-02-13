@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\Attendance;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UserAttendanceListTest extends TestCase
 {
@@ -33,7 +32,7 @@ class UserAttendanceListTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('2026-01-01');
-        $response->assertDontSee((string)$otherUser->id);
+        $response->assertDontSee((string) $otherUser->id);
     }
 
     /** 勤怠一覧画面に現在の月が表示される */
@@ -60,7 +59,7 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get(route('user.index', [
-            'month' => '2025-12'
+            'month' => '2025-12',
         ]));
 
         $response->assertStatus(200);

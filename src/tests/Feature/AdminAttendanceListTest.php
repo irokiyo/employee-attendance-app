@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\Attendance;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminAttendanceListTest extends TestCase
 {
@@ -65,7 +64,7 @@ class AdminAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin)->get(route('admin.index', [
-            'date' => '2026-01-28'
+            'date' => '2026-01-28',
         ]));
 
         $response->assertStatus(200);
@@ -84,7 +83,7 @@ class AdminAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin)->get(route('admin.index', [
-            'date' => '2026-01-30'
+            'date' => '2026-01-30',
         ]));
 
         $response->assertStatus(200);

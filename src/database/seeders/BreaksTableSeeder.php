@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\BreakTime;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\BreakTime;
 
 class BreaksTableSeeder extends Seeder
 {
@@ -46,12 +46,11 @@ class BreaksTableSeeder extends Seeder
                 ->whereIn('attendance_id', $attendanceIds)
                 ->delete();
 
-
             foreach ($attendanceIds as $attendanceId) {
                 BreakTime::create([
                     'attendance_id' => $attendanceId,
                     'break_start_time' => '11:00:00',
-                    'break_end_time'   => '12:00:00',
+                    'break_end_time' => '12:00:00',
                 ]);
             }
         });

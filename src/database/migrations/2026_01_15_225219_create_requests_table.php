@@ -18,7 +18,7 @@ class CreateRequestsTable extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
             $table->foreignId('break_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->string('status')->default('pending');;
+            $table->string('status')->default('pending');
             $table->json('payload');
             $table->text('reason');
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();

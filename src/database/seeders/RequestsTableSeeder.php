@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Request;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Models\Request;
-
 
 class RequestsTableSeeder extends Seeder
 {
@@ -30,7 +29,7 @@ class RequestsTableSeeder extends Seeder
             foreach ($targetEmails as $email) {
                 $userId = DB::table('users')->where('email', $email)->value('id');
 
-                if (!$userId) {
+                if (! $userId) {
                     continue;
                 }
 
@@ -39,7 +38,7 @@ class RequestsTableSeeder extends Seeder
                     ->where('date', $targetDate)
                     ->value('id');
 
-                if (!$attendanceId) {
+                if (! $attendanceId) {
                     continue;
                 }
 
@@ -48,7 +47,7 @@ class RequestsTableSeeder extends Seeder
                     ->orderBy('id')
                     ->value('id');
 
-                if (!$breakId) {
+                if (! $breakId) {
                     continue;
                 }
 
@@ -57,7 +56,7 @@ class RequestsTableSeeder extends Seeder
                     'break' => [
                         'id' => $breakId,
                         'break_start_time' => '12:00:00',
-                        'break_end_time'   => '13:00:00',
+                        'break_end_time' => '13:00:00',
                     ],
                 ];
 

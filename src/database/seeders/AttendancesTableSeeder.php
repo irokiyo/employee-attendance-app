@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\CarbonPeriod;
-use Carbon\Carbon;
 
 class AttendancesTableSeeder extends Seeder
 {
@@ -25,14 +25,14 @@ class AttendancesTableSeeder extends Seeder
                 $period = CarbonPeriod::create('2023-06-01', '2023-06-30');
                 foreach ($period as $day) {
                     if ($day->isWeekend()) {
-                    continue;
+                        continue;
                     }
 
                     DB::table('attendances')->insert([
-                        'user_id'=> $renaId,
-                        'date'=> $day->toDateString(),
-                        'start_time'=> '09:00:00',
-                        'end_time'=> '18:00:00',
+                        'user_id' => $renaId,
+                        'date' => $day->toDateString(),
+                        'start_time' => '09:00:00',
+                        'end_time' => '18:00:00',
                     ]);
                 }
             }
@@ -47,11 +47,11 @@ class AttendancesTableSeeder extends Seeder
                     $day = Carbon::create(2023, 6, 1)->addDays(random_int(0, 29));
 
                     $startHour = random_int(7, 11);
-                    $startMin  = [0, 30][random_int(0, 1)];
+                    $startMin = [0, 30][random_int(0, 1)];
 
                     $workHours = random_int(3, 8);
-                    $endHour   = $startHour + $workHours;
-                    $endMin    = $startMin;
+                    $endHour = $startHour + $workHours;
+                    $endMin = $startMin;
 
                     DB::table('attendances')->insert([
                         'user_id' => $userId,
@@ -64,4 +64,3 @@ class AttendancesTableSeeder extends Seeder
         });
     }
 }
-

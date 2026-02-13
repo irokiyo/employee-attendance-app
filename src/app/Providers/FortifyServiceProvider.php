@@ -6,20 +6,19 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use Illuminate\Cache\RateLimiting\Limit;
-use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
-use Laravel\Fortify\Contracts\LogoutResponse;
 use App\Http\Requests\LoginRequest;
+use App\Models\User;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\VerifyEmailResponse;
-
+use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -29,7 +28,8 @@ class FortifyServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(RegisterResponse::class, function () {
-            return new class implements RegisterResponse {
+            return new class implements RegisterResponse
+            {
                 public function toResponse($request)
                 {
                     return redirect('/email/verify');
@@ -38,7 +38,8 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(VerifyEmailResponse::class, function () {
-            return new class implements VerifyEmailResponse {
+            return new class implements VerifyEmailResponse
+            {
                 public function toResponse($request)
                 {
                     return redirect('/attendance');
@@ -47,7 +48,8 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(LoginResponse::class, function () {
-            return new class implements LoginResponse {
+            return new class implements LoginResponse
+            {
                 public function toResponse($request)
                 {
                     return $request->input('login_type') === 'admin'
@@ -57,7 +59,8 @@ class FortifyServiceProvider extends ServiceProvider
             };
         });
         $this->app->singleton(LogoutResponse::class, function () {
-            return new class implements LogoutResponse {
+            return new class implements LogoutResponse
+            {
                 public function toResponse($request)
                 {
                     return $request->input('logout_type') === 'admin'
@@ -78,10 +81,10 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::loginView(function () {
-        return view('user.auth.login');
+            return view('user.auth.login');
         });
         Fortify::registerView(function () {
-        return view('user.auth.register');
+            return view('user.auth.register');
         });
 
         RateLimiter::for('login', function (Request $request) {
@@ -98,11 +101,11 @@ class FortifyServiceProvider extends ServiceProvider
             $user = User::where('email', $request->email)->first();
 
             if (! $user || ! Hash::check($request->password, $user->password)) {
-            return null;
+                return null;
             }
 
             if ($request->input('login_type') === 'admin') {
-            return $user->status === 'admin' ? $user : null;
+                return $user->status === 'admin' ? $user : null;
             }
 
             return $user;

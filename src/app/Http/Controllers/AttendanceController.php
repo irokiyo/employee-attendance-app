@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Attendance;
-use App\Models\BreakTime;
-use App\Models\AttendanceRequest;
 use App\Http\Requests\AttendanceRequestRequest;
-use Illuminate\Support\Facades\DB;
+use App\Models\Attendance;
+use App\Models\AttendanceRequest;
+use App\Models\BreakTime;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    //勤怠一覧画面(管理者)
+    // 勤怠一覧画面(管理者)
     public function adminIndex(Request $request)
     {
         $day = $request->input('date', now()->toDateString());
@@ -29,59 +27,63 @@ class AttendanceController extends Controller
             ->get();
         $attendances->each(function ($attendance) {
             $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
-            $attendance->end_label  = $attendance->end_time   ? Carbon::parse($attendance->end_time)->format('H:i')   : '';
+            $attendance->end_label = $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '';
             $attendance->breaks->each(function ($break) {
-            $break->start_label = $break->break_start_time
-            ? Carbon::parse($break->break_start_time)->format('H:i')
-            : '';
+                $break->start_label = $break->break_start_time
+                ? Carbon::parse($break->break_start_time)->format('H:i')
+                : '';
 
-            $break->end_label = $break->break_end_time
-            ? Carbon::parse($break->break_end_time)->format('H:i')
-            : '';
+                $break->end_label = $break->break_end_time
+                ? Carbon::parse($break->break_end_time)->format('H:i')
+                : '';
             });
         });
 
-        return view('admin.index',[
-            'attendances' =>$attendances,
+        return view('admin.index', [
+            'attendances' => $attendances,
             'currentDate' => $current->format('Y年n月j日'),
-            'prevDate' =>$prevDate,
-            'nextDate' =>$nextDate,
+            'prevDate' => $prevDate,
+            'nextDate' => $nextDate,
         ]);
 
     }
-    //勤怠詳細画面（管理者）
-    public function adminDetail($id){
-        $attendance = Attendance::with(['user','breaks'])->findOrFail($id);
+
+    // 勤怠詳細画面（管理者）
+    public function adminDetail($id)
+    {
+        $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
 
         $date = $attendance->date ? Carbon::parse($attendance->date) : null;
         $attendance->year_label = $date ? $date->format('Y年') : '';
-        $attendance->md_label  = $date ? $date->format('n月j日') : '';
+        $attendance->md_label = $date ? $date->format('n月j日') : '';
         $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
-        $attendance->end_label  = $attendance->end_time   ? Carbon::parse($attendance->end_time)->format('H:i')   : '';
+        $attendance->end_label = $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '';
         $attendance->breaks->each(function ($break) {
-        $break->start_label = $break->break_start_time
-            ? Carbon::parse($break->break_start_time)->format('H:i')
-            : '';
+            $break->start_label = $break->break_start_time
+                ? Carbon::parse($break->break_start_time)->format('H:i')
+                : '';
 
-        $break->end_label = $break->break_end_time
-            ? Carbon::parse($break->break_end_time)->format('H:i')
-            : '';
+            $break->end_label = $break->break_end_time
+                ? Carbon::parse($break->break_end_time)->format('H:i')
+                : '';
         });
 
         return view('admin.detail.show', compact('attendance'));
     }
-    //勤怠詳細修正登録（管理者）
-    public function adminDetailSave(AttendanceRequestRequest $request, $id){
+
+    // 勤怠詳細修正登録（管理者）
+    public function adminDetailSave(AttendanceRequestRequest $request, $id)
+    {
         $data = $request->validated();
 
-        $start = !empty($data['start_time'])
+        $start = ! empty($data['start_time'])
         ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
         : null;
-        $end = !empty($data['end_time'])
+        $end = ! empty($data['end_time'])
         ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
         : null;
         $breaksPayload = [];
-        if (!empty($data['breaks']) && is_array($data['breaks'])) {
+        if (! empty($data['breaks']) && is_array($data['breaks'])) {
             foreach ($data['breaks'] as $b) {
                 $bs = $b['break_start_time'] ?? null;
                 $be = $b['break_end_time'] ?? null;
@@ -92,10 +94,10 @@ class AttendanceController extends Controller
 
                 $breaksPayload[] = [
                     'break_id' => $b['break_id'] ?? null,
-                    'break_start_time' => !empty($bs)
+                    'break_start_time' => ! empty($bs)
                         ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s')
                         : null,
-                    'break_end_time' => !empty($be)
+                    'break_end_time' => ! empty($be)
                         ? Carbon::createFromFormat('H:i', $be)->format('H:i:s')
                         : null,
                 ];
@@ -104,25 +106,25 @@ class AttendanceController extends Controller
 
         $payload = [
             'start_time' => $start,
-            'end_time'   => $end,
-            'breaks'     => $breaksPayload,
+            'end_time' => $end,
+            'breaks' => $breaksPayload,
         ];
 
         AttendanceRequest::create([
             'user_id' => auth()->id(),
-            'attendance_id'=> $id,
-            'break_id'=> null,
-            'status'=> 'pending',
-            'payload'=> $payload,
+            'attendance_id' => $id,
+            'break_id' => null,
+            'status' => 'pending',
+            'payload' => $payload,
             'reason' => $data['reason'],
-            'reviewed_by'=> null,
-            'reviewed_at'=> null,
+            'reviewed_by' => null,
+            'reviewed_at' => null,
         ]);
 
         return redirect()->route('request.index');
     }
 
-    //勤務登録画面(一般ユーザー)
+    // 勤務登録画面(一般ユーザー)
     public function userAttendance(Request $request)
     {
         $userId = auth()->id();
@@ -131,7 +133,7 @@ class AttendanceController extends Controller
             ->whereDate('date', today())
             ->first();
 
-        $latestBreak = $attendance ? $attendance->breaks()->latest('id')->first(): null;
+        $latestBreak = $attendance ? $attendance->breaks()->latest('id')->first() : null;
 
         $isBreak = $latestBreak && is_null($latestBreak->break_end_time);
 
@@ -145,11 +147,11 @@ class AttendanceController extends Controller
                 );
             }
 
-            if ($action === 'break_start' && $attendance && !$attendance->end_time) {
-                if (!$isBreak) {
+            if ($action === 'break_start' && $attendance && ! $attendance->end_time) {
+                if (! $isBreak) {
                     BreakTime::create([
-                    'attendance_id' => $attendance->id,
-                    'break_start_time' => now()->format('H:i:s'),
+                        'attendance_id' => $attendance->id,
+                        'break_start_time' => now()->format('H:i:s'),
                     ]);
                 }
             }
@@ -157,12 +159,12 @@ class AttendanceController extends Controller
             if ($action === 'break_end' && $attendance) {
                 if ($isBreak) {
                     $latestBreak->update([
-                    'break_end_time' => now()->format('H:i:s'),
+                        'break_end_time' => now()->format('H:i:s'),
                     ]);
                 }
             }
 
-            if ($action === 'end' && $attendance && !$attendance->end_time) {
+            if ($action === 'end' && $attendance && ! $attendance->end_time) {
                 if ($isBreak) {
                     $latestBreak->update(['break_end_time' => now()->format('H:i:s')]);
                 }
@@ -172,7 +174,7 @@ class AttendanceController extends Controller
             return redirect()->route('user.attendance');
         }
 
-        if (!$attendance) {
+        if (! $attendance) {
             $status = 'outside';
         } elseif ($attendance->end_time) {
             $status = 'finished';
@@ -189,7 +191,8 @@ class AttendanceController extends Controller
             'time' => now()->format('H:i'),
         ]);
     }
-    //勤怠一覧画面（一般ユーザー)
+
+    // 勤怠一覧画面（一般ユーザー)
     public function userIndex(Request $request)
     {
         $userId = auth()->id();
@@ -203,7 +206,7 @@ class AttendanceController extends Controller
         $prevMonth = $current->copy()->subMonth()->format('Y-m');
         $nextMonth = $current->copy()->addMonth()->format('Y-m');
 
-        $weekdays = ['日','月','火','水','木','金','土'];
+        $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
         $attendances = Attendance::query()
             ->where('user_id', $userId)
@@ -211,16 +214,16 @@ class AttendanceController extends Controller
             ->orderBy('date')
             ->get()
             ->map(function ($a) use ($weekdays) {
-            $d = Carbon::parse($a->date);
-            $a->date_label = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
+                $d = Carbon::parse($a->date);
+                $a->date_label = $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')';
 
-            $a->start_label = $a->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
-            $a->end_label   = $a->end_time   ? Carbon::parse($a->end_time)->format('H:i')   : '';
+                $a->start_label = $a->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
+                $a->end_label = $a->end_time ? Carbon::parse($a->end_time)->format('H:i') : '';
 
-            return $a;
+                return $a;
             });
 
-        $attendanceByDate = $attendances->keyBy(fn($a) => Carbon::parse($a->date)->toDateString());
+        $attendanceByDate = $attendances->keyBy(fn ($a) => Carbon::parse($a->date)->toDateString());
 
         $rows = collect();
         for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
@@ -228,20 +231,20 @@ class AttendanceController extends Controller
             $a = $attendanceByDate->get($dateStr);
 
             $rows->push([
-                'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
+                'date_label' => $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')',
                 'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
-                'end_label'   => $a?->end_time   ? Carbon::parse($a->end_time)->format('H:i')   : '',
+                'end_label' => $a?->end_time ? Carbon::parse($a->end_time)->format('H:i') : '',
                 'total_break_time' => $a->total_break_time ?? '',
                 'total_time' => $a->total_time ?? '',
                 'attendance_id' => $a->id ?? null,
             ]);
         }
 
-        return view('user.index',[
+        return view('user.index', [
             'rows' => $rows,
-            'currentMonthLabel' => $current ->format('Y/m'),
-            'prevMonth' =>$prevMonth,
-            'nextMonth' =>$nextMonth,
+            'currentMonthLabel' => $current->format('Y/m'),
+            'prevMonth' => $prevMonth,
+            'nextMonth' => $nextMonth,
         ]);
     }
 }

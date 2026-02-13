@@ -1,0 +1,58 @@
+name: CI
+
+on:
+    push:
+    pull_request:
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: laravel_test
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Install dependencies
+        run: |
+          cd src
+          composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Copy .env
+        run: |
+          cd src
+          cp .env.example .env
+
+      - name: Generate key
+        run: |
+          cd src
+          php artisan key:generate
+
+      - name: Run migrations
+        run: |
+          cd src
+          php artisan migrate --force
+
+      - name: Run tests
+        run: |
+          cd src
+          php artisan test
