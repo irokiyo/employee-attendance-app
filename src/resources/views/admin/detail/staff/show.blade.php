@@ -71,7 +71,9 @@
             </table>
         </div>
         <div class="actions">
-            <button type="btn" class="btn">CSV出力</button>
+            <a class="btn" href="{{ route('admin.attendance.csv', ['id' => $user->id, 'month' => request('month', now()->format('Y-m'))]) }}">
+                CSV出力
+            </a>
         </div>
     </div>
 </div>

@@ -69,7 +69,6 @@
                         </div>
                         @error("breaks.$i.break_start_time") <p class="error-message">{{ $message }}</p> @enderror
                     </div>
-
                     @empty
                     <div class="row">
                         <div class="row__head">休憩</div>
@@ -79,14 +78,12 @@
                             <span class="time__sep">〜</span>
                             <p class="time-character">{{ $reqBreaks[0]['break_end_time'] ?? '' }}</p>
                             @else
-                            <input type="text" class="input input--time" value="">
+                            <input type="text" class="input input--time" name="breaks[0][break_start_time]" value="{{ old('breaks.0.break_start_time', $reqBreaks[0]['break_start_time'] ?? '') }}">
                             <span class="time__sep">〜</span>
-                            <input type="text" class="input input--time" value="">
+                            <input type="text" class="input input--time" name="breaks[0][break_end_time]" value="{{ old('breaks.0.break_end_time', $reqBreaks[0]['break_end_time'] ?? '') }}" >
                             @endif
                         </div>
-                        @error('reason')
-                        <p class="error-message">{{ $message }}</p>
-                        @enderror
+                        @error('breaks.0.break_end_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
                     @endforelse
 

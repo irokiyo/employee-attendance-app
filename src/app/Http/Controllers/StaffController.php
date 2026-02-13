@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Attendance;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class StaffController extends Controller
 {
@@ -62,4 +64,46 @@ class StaffController extends Controller
         ]);
     }
 
+    //スタッフCSV出力（管理者）
+    public function exportCsv(Request $request, $id){
+        $user = User::findOrFail($id);
+        $month = $request->input('month', now()->format('Y-m'));
+        $current = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+        $start = $current->copy()->startOfMonth();
+        $end   = $current->copy()->endOfMonth();
+        $weekdays = ['日','月','火','水','木','金','土'];
+        $attendances = Attendance::query()
+        ->where('user_id', $id)
+        ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+        ->orderBy('date')
+        ->get();
+        $attendanceByDate = $attendances->keyBy(fn ($a) => Carbon::parse($a->date)->toDateString());
+
+        $filename = "勤怠詳細_{$user->name}さん_{$month}月分分.csv";
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+        return response()->streamDownload(function () use ($start, $end, $attendanceByDate, $weekdays) {
+            $out = fopen('php://output', 'w');
+            fwrite($out, "\xEF\xBB\xBF");
+            fputcsv($out, ['日付', '出勤', '退勤', '休憩', '合計']);
+            for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
+                $dateStr = $d->toDateString();
+                $a = $attendanceByDate->get($dateStr);
+                $dateLabel  = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
+                $startLabel = $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
+                $endLabel   = $a?->end_time   ? Carbon::parse($a->end_time)->format('H:i') : '';
+
+                fputcsv($out, [
+                    $dateLabel,
+                    $startLabel,
+                    $endLabel,
+                    $a?->total_break_time ?? '',
+                    $a?->total_time ?? '',
+                ]);
+            }
+            fclose($out);
+        }, $filename, $headers);
+    }
 }

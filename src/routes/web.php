@@ -35,6 +35,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/staff/list', [StaffController::class, 'adminStaffIndex'])->name('admin.staff.index');
     //スタッフ別勤怠一覧画面（管理者）
     Route::get('/admin/attendance/staff/{id}', [StaffController::class, 'adminStaffShow'])->name('admin.attendance.show');
+    //スタッフCSV出力（管理者）
+    Route::get('/admin/attendance/staff/{id}/csv', [StaffController::class, 'exportCsv'])->name('admin.attendance.csv');
 
     //修正申請承認画面（管理者）
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [RequestController::class, 'adminRequestShow'])->name('admin.request.show');
