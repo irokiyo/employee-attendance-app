@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/css/attendance-list.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/attendance-list.css') }}" />
 @endsection
 
 @section('header')
@@ -10,10 +10,10 @@
 
 @section('content')
 <div class="attendance-list">
-    <div class="attendance-page__inner">
+    <div class="attendance-list__inner">
 
-        <h1 class="page__title">{{ $user->name }}さんの勤怠
-        </h1>
+        <h2 class="page__title">{{ $user->name }}さんの勤怠
+        </h2>
 
         <div class="attendance-nav">
             <div class="prev-month">
