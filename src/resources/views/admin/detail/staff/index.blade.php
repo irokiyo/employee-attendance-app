@@ -1,9 +1,4 @@
 @extends('layouts.app')
-
-@section('css')
-<link rel="stylesheet" href="{{ asset('css/admin/staff.css') }}" />
-@endsection
-
 @section('header')
 @include('partials.admin-header')
 @endsection

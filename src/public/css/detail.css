@@ -1,4 +1,3 @@
-
 .request-form{
     width: 100%;
 
@@ -11,10 +10,6 @@
     overflow: hidden;
     width: 100%;
     margin: 0 auto;
-}
-
-.table {
-    width: 100%;
 }
 
 .row {
@@ -52,7 +47,6 @@
     font-weight: 800;
 }
 
-/* date */
 .date {
     gap: 60px;
 }
@@ -61,7 +55,6 @@
     min-width: 120px;
 }
 
-/* inputs */
 .input {
     height: 28px;
     border: 1px solid #dcdcdc;
@@ -93,7 +86,7 @@
     resize: none;
 }
 
-/* ===== actions ===== */
+
 .actions {
     max-width: 720px;
     margin: 18px auto 0;
@@ -101,21 +94,6 @@
     justify-content: flex-end;
 }
 
-.btn {
-    background: #000;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    height: 40px;
-    width: 110px;
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
 .btn-gray{
     background: #696969;
     color: #fff;
@@ -125,9 +103,7 @@
     width: 110px;
     font-size: 14px;
     font-weight: 800;
-    
 }
-
 
 .time-character{
     font-weight: bolder;
