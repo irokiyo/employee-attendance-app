@@ -45,7 +45,7 @@ class ClockOutTest extends TestCase
         ]);
 
         $this->actingAs($user)->post(route('user.attendance'), [
-            'action' => 'clock_out',
+            'action' => 'end',
         ])->assertStatus(302);
 
         $page = $this->actingAs($user)->get(route('user.attendance'));

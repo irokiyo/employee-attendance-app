@@ -12,12 +12,12 @@ class DateTimeTest extends TestCase
     use RefreshDatabase;
 
     /** 現在の日時情報がUIと同じ形式で出力されている */
-    public function test_current_datetime_is_displayed_in_attendance_page(): void
+    public function testCurrentDatetimeIsDisplayedInAttendancePage(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 9, 0, 0));
 
         $user = User::factory()->create([
-            'email_verified_at' => now(), // verified必須なら
+            'email_verified_at' => now(),
         ]);
 
         $response = $this->actingAs($user)->get(route('user.attendance'));

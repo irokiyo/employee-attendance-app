@@ -17,14 +17,10 @@ class AttendanceRequestRequest extends FormRequest
     {
         return [
             'reason' => ['required'],
-
             'attendance_id' => ['required', 'exists:attendances,id'],
-
             'break_id' => ['nullable', 'exists:breaks,id'],
-
             'start_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
             'end_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
-
             'breaks' => ['nullable', 'array'],
             'breaks.*.break_id' => ['nullable', 'exists:breaks,id'],
             'breaks.*.break_start_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
@@ -46,7 +42,6 @@ class AttendanceRequestRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $validator->after(function ($validator) {
-
             $startT = $this->safeParseTime($this->input('start_time'));
             $endT = $this->safeParseTime($this->input('end_time'));
 
@@ -60,7 +55,6 @@ class AttendanceRequestRequest extends FormRequest
                 return;
             }
 
-            // ② 休憩チェック
             $breaks = $this->input('breaks', []);
             foreach ($breaks as $i => $b) {
                 $bs = $b['break_start_time'] ?? null;

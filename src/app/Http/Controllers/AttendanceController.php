@@ -165,7 +165,7 @@ class AttendanceController extends Controller
     }
 
 
-    // 勤務登録画面(一般ユーザー)
+    // 出勤登録画面(一般ユーザー)
     public function userAttendance(Request $request)
     {
         $userId = auth()->id();

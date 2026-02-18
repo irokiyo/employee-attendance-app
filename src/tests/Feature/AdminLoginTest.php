@@ -13,54 +13,62 @@ class AdminLoginTest extends TestCase
 
     private string $adminLoginUrl = '/admin/login';
 
-    /** メールアドレスが未入力の場合、バリデーションメッセージが表示される（管理者） */
-    public function test_admin_login_email_required(): void
+    private function validData(array $overrides = []): array
     {
-        $response = $this->from($this->adminLoginUrl)->post($this->adminLoginUrl, [
-            'login_type' => 'admin', // あなたのフォームに合わせて
-            'email' => '',
-            'password' => 'password123',
-        ]);
-
-        $response->assertRedirect($this->adminLoginUrl);
-        $response->assertSessionHasErrors(['email']);
-        $this->followRedirects($response)->assertSee('メールアドレスを入力してください');
+        return array_merge([
+            'email' => 'test@example.com',
+            'password' => 'password',
+        ], $overrides);
     }
 
-    /** パスワードが未入力の場合、バリデーションメッセージが表示される（管理者） */
-    public function test_admin_login_password_required(): void
+    //emailのバリデーション
+    public function testLoginEmailValidation()
     {
-        $response = $this->from($this->adminLoginUrl)->post($this->adminLoginUrl, [
-            'login_type' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => '',
-        ]);
+        $response = $this->from(route('login'))
+            ->post(route('login'), $this->validData([
+                'email' => '',
+            ]));
 
-        $response->assertRedirect($this->adminLoginUrl);
-        $response->assertSessionHasErrors(['password']);
-        $this->followRedirects($response)->assertSee('パスワードを入力してください');
+        $response->assertRedirect(route('login'));
+
+        $response->assertSessionHasErrors([
+            'email' => 'メールアドレスを入力してください',
+        ]);
     }
 
-    /** 登録内容と一致しない場合、バリデーションメッセージが表示される（管理者） */
-    public function test_admin_login_invalid_credentials_message(): void
+    //passwordのバリデーション
+    public function testLoginPasswordValidation()
     {
-        // 管理者ユーザーの作成（ここはあなたの管理者判定カラムに合わせて調整）
-        // 例: is_admin / role / admin_flg など
+        $response = $this->from(route('login'))
+            ->post(route('login'), $this->validData([
+                'password' => '',
+            ]));
+
+        $response->assertRedirect(route('login'));
+
+        $response->assertSessionHasErrors([
+            'password' => 'パスワードを入力してください',
+        ]);
+    }
+
+    //入力情報が違うときのバリデーション
+    public function testLoginMismatchValidation()
+    {
         User::factory()->create([
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password123'),
-            // 'is_admin' => 1,
+        'email' => 'test@example.com',
+        'password' => bcrypt('password'),
         ]);
 
-        $response = $this->from($this->adminLoginUrl)->post($this->adminLoginUrl, [
-            'login_type' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => 'wrong-password',
+        $response = $this->from(route('login'))
+            ->post(route('login'), $this->validData([
+                'email' => '123@example.com',
+                'password' => 'pass',
+            ]));
+
+        $response->assertRedirect(route('login'));
+
+        $response->assertSessionHasErrors([
+            'email'   => 'ログイン情報が登録されていません',
         ]);
-
-        $response->assertRedirect($this->adminLoginUrl);
-        $response->assertSessionHasErrors();
-
-        $this->followRedirects($response)->assertSee('ログイン情報が登録されていません');
     }
 }

@@ -11,54 +11,63 @@ class UserLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    private string $loginUrl = '/login';
-
-    /** メールアドレスが未入力の場合、バリデーションメッセージが表示される */
-    public function test_login_email_required(): void
+    private function validData(array $overrides = []): array
     {
-        $response = $this->from($this->loginUrl)->post($this->loginUrl, [
-            'email' => '',
-            'password' => 'password123',
-        ]);
-
-        $response->assertRedirect($this->loginUrl);
-        $response->assertSessionHasErrors(['email']);
-        $this->followRedirects($response)->assertSee('メールアドレスを入力してください');
-    }
-
-    /** パスワードが未入力の場合、バリデーションメッセージが表示される */
-    public function test_login_password_required(): void
-    {
-        $response = $this->from($this->loginUrl)->post($this->loginUrl, [
+        return array_merge([
             'email' => 'test@example.com',
-            'password' => '',
-        ]);
-
-        $response->assertRedirect($this->loginUrl);
-        $response->assertSessionHasErrors(['password']);
-        $this->followRedirects($response)->assertSee('パスワードを入力してください');
+            'password' => 'password',
+        ], $overrides);
     }
 
-    /** 登録内容と一致しない場合、バリデーションメッセージが表示される */
-    public function test_login_invalid_credentials_message(): void
+    //emailのバリデーション
+    /** @test */
+    public function testLoginEmailValidation()
     {
-        // 登録ユーザーを作る
+        $response = $this->from(route('login'))
+            ->post(route('login'), $this->validData([
+                'email' => '',
+            ]));
+
+        $response->assertRedirect(route('login'));
+
+        $response->assertSessionHasErrors([
+            'email' => 'メールアドレスを入力してください',
+        ]);
+    }
+
+    //passwordのバリデーション
+    public function testLoginPasswordValidation()
+    {
+        $response = $this->from(route('login'))
+            ->post(route('login'), $this->validData([
+                'password' => '',
+            ]));
+
+        $response->assertRedirect(route('login'));
+
+        $response->assertSessionHasErrors([
+            'password' => 'パスワードを入力してください',
+        ]);
+    }
+
+    //入力情報が違うときのバリデーション
+    public function testLoginMismatchValidation()
+    {
         User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('password123'),
+        'email' => 'test@example.com',
+        'password' => bcrypt('password'),
         ]);
 
-        // 間違ったパスワードでログイン
-        $response = $this->from($this->loginUrl)->post($this->loginUrl, [
-            'email' => 'test@example.com',
-            'password' => 'wrong-password',
+        $response = $this->from(route('login'))
+            ->post(route('login'), $this->validData([
+                'email' => '123@example.com',
+                'password' => 'pass',
+            ]));
+
+        $response->assertRedirect(route('login'));
+
+        $response->assertSessionHasErrors([
+            'email'   => 'ログイン情報が登録されていません',
         ]);
-
-        $response->assertRedirect($this->loginUrl);
-
-        // Fortify/標準Authだと errors は email に乗ることが多い
-        $response->assertSessionHasErrors();
-
-        $this->followRedirects($response)->assertSee('ログイン情報が登録されていません');
     }
 }
