@@ -83,6 +83,7 @@
                             <input type="text" class="input input--time" name="breaks[0][break_end_time]" value="{{ old('breaks.0.break_end_time', $reqBreaks[0]['break_end_time'] ?? '') }}" >
                             @endif
                         </div>
+                        @error('breaks.0.break_start_time')<p class="error-message">{{ $message }}</p>@enderror
                         @error('breaks.0.break_end_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
                     @endforelse

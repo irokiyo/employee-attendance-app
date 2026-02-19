@@ -79,13 +79,19 @@ class AttendanceRequestRequest extends FormRequest
                 }
 
                 if ($bsT->gte($beT)) {
-                    $validator->errors()->add("breaks.$i.break_start_time", '休憩時間が不適切な値です');
-
-                    continue;
+                $validator->errors()->add("breaks.$i.break_start_time", '休憩時間が不適切な値です');
+                $validator->errors()->add("breaks.$i.break_end_time", '休憩時間が不適切な値です');
+                continue;
                 }
 
-                if ($bsT->lt($startT) || $beT->gt($endT)) {
-                    $validator->errors()->add("breaks.$i.break_start_time", '休憩時間が勤務時間外です');
+                if ($beT->gt($endT)) {
+                $validator->errors()->add("breaks.$i.break_end_time", '休憩時間もしくは退勤時間が不適切な値です');
+                $validator->errors()->add('end_time', '休憩時間もしくは退勤時間が不適切な値です');
+                continue;
+                }
+
+                if ($bsT->lt($startT) || $bsT->gt($endT)) {
+                $validator->errors()->add("breaks.$i.break_start_time", '休憩時間が不適切な値です');
                 }
             }
         });
