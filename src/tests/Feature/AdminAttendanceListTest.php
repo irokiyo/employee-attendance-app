@@ -16,12 +16,12 @@ class AdminAttendanceListTest extends TestCase
     {
         return User::factory()->create([
             'email_verified_at' => now(),
-            // 'is_admin' => 1, // あなたの管理者判定に合わせて有効化
+            'status' => 'admin',
         ]);
     }
 
-    /** その日の全ユーザー勤怠が確認できる */
-    public function test_admin_can_see_all_users_attendance_of_the_day(): void
+    /** その日になされた全ユーザーの勤怠情報が正確に確認できる */
+    public function testAdminCanSeeAllUsersAttendanceOfTheDay(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -39,8 +39,8 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee('2026-01-29');
     }
 
-    /** 遷移時に現在の日付が表示される */
-    public function test_admin_list_shows_current_date(): void
+    /** 遷移した際に現在の日付が表示される */
+    public function testAdminListShowsCurrentDate(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -52,8 +52,8 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee('2026-01-29'); // UIが「2026年1月29日」ならそこに合わせて変更
     }
 
-    /** 前日ボタンで前日の勤怠が表示される（クエリで表現） */
-    public function test_admin_can_open_previous_day(): void
+    /** 「前日」を押下した時に前の日の勤怠情報が表示される */
+    public function testAdminCanOpenPreviousDay(): void
     {
         $admin = $this->adminUser();
 
@@ -71,8 +71,8 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee('2026-01-28');
     }
 
-    /** 翌日ボタンで翌日の勤怠が表示される（クエリで表現） */
-    public function test_admin_can_open_next_day(): void
+    /** 「翌日」を押下した時に次の日の勤怠情報が表示される */
+    public function testAdminCanOpenNextDay(): void
     {
         $admin = $this->adminUser();
 
