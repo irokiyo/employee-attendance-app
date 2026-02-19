@@ -106,8 +106,6 @@ class RegisterTest extends TestCase
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
-
-        // Fortify標準だと登録後はリダイレクト（メール認証に飛ばす等）
         $response->assertStatus(302);
 
         $this->assertDatabaseHas('users', [

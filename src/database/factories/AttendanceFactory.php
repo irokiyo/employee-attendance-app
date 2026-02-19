@@ -16,7 +16,7 @@ class AttendanceFactory extends Factory
         return [
             'user_id' => User::factory(),
             'date' => now()->toDateString(),
-            'start_time' => null,
+            'start_time' => '09:00:00',
             'end_time' => null,
         ];
     }

@@ -12,7 +12,7 @@ class UserAttendanceDetailTest extends TestCase
     use RefreshDatabase;
 
     /** 詳細画面の名前がログインユーザー名になっている */
-    public function test_detail_shows_logged_in_user_name(): void
+    public function testDetailShowsLoggedInUserName(): void
     {
         $user = User::factory()->create([
             'name' => '山田 太郎',
@@ -31,7 +31,7 @@ class UserAttendanceDetailTest extends TestCase
     }
 
     /** 詳細画面の日付が選択した日付になっている */
-    public function test_detail_shows_selected_date(): void
+    public function testDetailShowSelectedDate(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -44,13 +44,12 @@ class UserAttendanceDetailTest extends TestCase
 
         $response->assertStatus(200);
 
-        // UIが「2026年」「1月29日」形式なら合わせて
         $response->assertSee('2026年');
         $response->assertSee('1月29日');
     }
 
     /** 出勤・退勤の時間が打刻と一致している */
-    public function test_detail_shows_start_and_end_time(): void
+    public function testDetailShowsStartAndEndTime(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -65,13 +64,12 @@ class UserAttendanceDetailTest extends TestCase
 
         $response->assertStatus(200);
 
-        // 表示が H:i なら 09:00 / 18:00 に変更
         $response->assertSee('09:00');
         $response->assertSee('18:00');
     }
 
     /** 休憩の時間が打刻と一致している */
-    public function test_detail_shows_break_time(): void
+    public function tesDetailShowsBreakTime(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -82,8 +80,7 @@ class UserAttendanceDetailTest extends TestCase
             'end_time' => '18:00:00',
         ]);
 
-        // Breakモデル名があなたの実装で違う可能性あり：適宜差し替え
-        \App\Models\BreakTime::factory()->create([
+        BreakTime::factory()->create([
             'attendance_id' => $attendance->id,
             'break_start_time' => '12:00:00',
             'break_end_time' => '13:00:00',
