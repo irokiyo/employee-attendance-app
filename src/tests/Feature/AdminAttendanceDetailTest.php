@@ -2,19 +2,18 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Attendance;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminAttendanceDetailTest extends TestCase
 {
     use RefreshDatabase;
 
     /** 勤怠詳細画面に表示されるデータが選択したものになっている */
-    public function testAttendanceDetailsScreenIsDisplayedCorrectly()
+    public function test_attendance_details_screen_is_displayed_correctly()
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -29,8 +28,9 @@ class AdminAttendanceDetailTest extends TestCase
         $response->assertSee(Carbon::parse($attendance->date)->format('Y年'));
         $response->assertSee(Carbon::parse($attendance->date)->format('n月j日'));
     }
+
     /** 出勤時間が退勤時間より後になっている場合、エラーメッセージが表示される*/
-    public function testStartTimeAfterEndTimeShowsError(): void
+    public function test_start_time_after_end_time_shows_error(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -47,7 +47,7 @@ class AdminAttendanceDetailTest extends TestCase
             ->from(route('admin.detail', $attendance->id))
             ->post(route('admin.detail.save', $attendance->id), [
                 'start_time' => '19:00',
-                'end_time'   => '18:00',
+                'end_time' => '18:00',
                 'breaks' => [
                     ['break_start_time' => '', 'break_end_time' => ''],
                 ],
@@ -64,7 +64,7 @@ class AdminAttendanceDetailTest extends TestCase
     }
 
     /** 休憩開始時間が退勤時間より後になっている場合、エラーメッセージが表示される */
-    public function testBreakStartOutsideWorkTimeShowsError(): void
+    public function test_break_start_outside_work_time_shows_error(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -81,7 +81,7 @@ class AdminAttendanceDetailTest extends TestCase
             ->from(route('admin.detail', $attendance->id))
             ->post(route('admin.detail.save', $attendance->id), [
                 'start_time' => '09:00',
-                'end_time'   => '18:00',
+                'end_time' => '18:00',
                 'breaks' => [
                     ['break_start_time' => '08:50', 'break_end_time' => '09:10'],
                 ],
@@ -98,7 +98,7 @@ class AdminAttendanceDetailTest extends TestCase
     }
 
     /** 休憩終了時間が退勤時間より後になっている場合、エラーメッセージが表示される */
-    public function testBreakEndAfterEndTimeShowsError(): void
+    public function test_break_end_after_end_time_shows_error(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -115,7 +115,7 @@ class AdminAttendanceDetailTest extends TestCase
             ->from(route('admin.detail', $attendance->id))
             ->post(route('admin.detail.save', $attendance->id), [
                 'start_time' => '09:00',
-                'end_time'   => '18:00',
+                'end_time' => '18:00',
                 'breaks' => [
                     ['break_start_time' => '17:00', 'break_end_time' => '19:10'],
                 ],
@@ -132,7 +132,7 @@ class AdminAttendanceDetailTest extends TestCase
     }
 
     /** 備考欄が未入力の場合のエラーメッセージが表示される*/
-    public function testReasonRequiredShowsError(): void
+    public function test_reason_required_shows_error(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -149,7 +149,7 @@ class AdminAttendanceDetailTest extends TestCase
             ->from(route('admin.detail', $attendance->id))
             ->post(route('admin.detail.save', $attendance->id), [
                 'start_time' => '09:00',
-                'end_time'   => '18:00',
+                'end_time' => '18:00',
                 'breaks' => [
                     ['break_start_time' => '', 'break_end_time' => ''],
                 ],
@@ -164,5 +164,4 @@ class AdminAttendanceDetailTest extends TestCase
             session('errors')->first('reason')
         );
     }
-
 }

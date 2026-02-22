@@ -13,17 +13,17 @@ class BreakTimeTest extends TestCase
     use RefreshDatabase;
 
     /** 休憩ボタンが正しく機能する */
-    public function testBreakInButtonIsShownAndBreakInChangesStatus(): void
+    public function test_break_in_button_is_shown_and_break_in_changes_status(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
         $user = User::factory()->create(['email_verified_at' => now()]);
 
         Attendance::factory()->create([
-            'user_id'    => $user->id,
-            'date'       => '2026-01-29',
+            'user_id' => $user->id,
+            'date' => '2026-01-29',
             'start_time' => '09:00:00',
-            'end_time'   => null,
+            'end_time' => null,
         ]);
 
         $response = $this->actingAs($user)->get(route('user.attendance'));
@@ -42,7 +42,7 @@ class BreakTimeTest extends TestCase
     }
 
     /** 休憩は一日に何回でもできる */
-    public function testBreakCanBeDoneMultipleTimes(): void
+    public function test_break_can_be_done_multiple_times(): void
     {
         Carbon::setTestNow('2026-01-29 12:00:00');
 
@@ -63,16 +63,16 @@ class BreakTimeTest extends TestCase
     }
 
     /** 休憩戻ボタンが正しく機能する */
-    public function testBreakOutWorksAndStatusBecomesWorking(): void
+    public function test_break_out_works_and_status_becomes_working(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
         Carbon::setTestNow('2026-01-29 09:00:00');
         Attendance::factory()->create([
-            'user_id'    => $user->id,
-            'date'       => '2026-01-29',
+            'user_id' => $user->id,
+            'date' => '2026-01-29',
             'start_time' => '09:00:00',
-            'end_time'   => null,
+            'end_time' => null,
         ]);
 
         Carbon::setTestNow('2026-01-29 12:00:00');
@@ -95,16 +95,16 @@ class BreakTimeTest extends TestCase
     }
 
     /** 休憩戻は1日に何回でもできる */
-    public function testBreakOutCanBeDoneAnyTimes(): void
+    public function test_break_out_can_be_done_any_times(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
         Carbon::setTestNow('2026-01-29 09:00:00');
         Attendance::factory()->create([
-            'user_id'    => $user->id,
-            'date'       => '2026-01-29',
+            'user_id' => $user->id,
+            'date' => '2026-01-29',
             'start_time' => '09:00:00',
-            'end_time'   => null,
+            'end_time' => null,
         ]);
 
         Carbon::setTestNow('2026-01-29 12:00:00');
@@ -125,16 +125,16 @@ class BreakTimeTest extends TestCase
     }
 
     /** 休憩時刻が勤怠一覧画面で確認できる */
-    public function testBreakTimesAreVisibleOnAttendanceList(): void
+    public function test_break_times_are_visible_on_attendance_list(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
         Carbon::setTestNow('2026-01-29 09:00:00');
         Attendance::factory()->create([
-            'user_id'    => $user->id,
-            'date'       => '2026-01-29',
+            'user_id' => $user->id,
+            'date' => '2026-01-29',
             'start_time' => '09:00:00',
-            'end_time'   => null,
+            'end_time' => null,
         ]);
 
         Carbon::setTestNow('2026-01-29 12:00:00');
@@ -149,7 +149,5 @@ class BreakTimeTest extends TestCase
         $list->assertStatus(200);
 
         $list->assertSee('0:30');
-}
-
-
+    }
 }

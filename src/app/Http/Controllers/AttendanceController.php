@@ -76,10 +76,10 @@ class AttendanceController extends Controller
     {
         $data = $request->validated();
         $attendance = Attendance::with('breaks')->findOrFail($id);
-        $start = !empty($data['start_time'])
+        $start = ! empty($data['start_time'])
             ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
             : null;
-        $end = !empty($data['end_time'])
+        $end = ! empty($data['end_time'])
             ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
             : null;
 
@@ -87,7 +87,7 @@ class AttendanceController extends Controller
 
             $attendance->update([
                 'start_time' => $start,
-                'end_time'   => $end,
+                'end_time' => $end,
             ]);
 
             $sent = collect($data['breaks'] ?? []);
@@ -96,18 +96,19 @@ class AttendanceController extends Controller
                 $bs = $b['break_start_time'] ?? null;
                 $be = $b['break_end_time'] ?? null;
 
-                if (empty($bs) && empty($be)) continue;
+                if (empty($bs) && empty($be)) {
+                    continue;
+                }
 
                 $breakPayload = [
-                    'break_start_time' => !empty($bs) ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s') : null,
-                    'break_end_time'   => !empty($be) ? Carbon::createFromFormat('H:i', $be)->format('H:i:s') : null,
+                    'break_start_time' => ! empty($bs) ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s') : null,
+                    'break_end_time' => ! empty($be) ? Carbon::createFromFormat('H:i', $be)->format('H:i:s') : null,
                 ];
 
-                if (!empty($b['break_id'])) {
+                if (! empty($b['break_id'])) {
                     $attendance->breaks()->where('id', $b['break_id'])->update($breakPayload);
                     $keptIds[] = (int) $b['break_id'];
-                }
-                else {
+                } else {
                     $new = $attendance->breaks()->create($breakPayload);
                     $keptIds[] = $new->id;
                 }
@@ -122,16 +123,16 @@ class AttendanceController extends Controller
                 ->get(['id', 'break_start_time', 'break_end_time'])
                 ->map(function ($br) {
                     return [
-                        'break_id'         => $br->id,
+                        'break_id' => $br->id,
                         'break_start_time' => $br->break_start_time ? Carbon::parse($br->break_start_time)->format('H:i:s') : null,
-                        'break_end_time'   => $br->break_end_time ? Carbon::parse($br->break_end_time)->format('H:i:s') : null,
+                        'break_end_time' => $br->break_end_time ? Carbon::parse($br->break_end_time)->format('H:i:s') : null,
                     ];
                 })->toArray();
 
             $payload = [
                 'start_time' => $start,
-                'end_time'   => $end,
-                'breaks'     => $freshBreaks,
+                'end_time' => $end,
+                'breaks' => $freshBreaks,
             ];
 
             $req = AttendanceRequest::where('attendance_id', $attendance->id)
@@ -140,30 +141,28 @@ class AttendanceController extends Controller
 
             if ($req) {
                 $req->update([
-                    'status'      => 'approved',
-                    'payload'     => $payload,
-                    'reason'      => $data['reason'],
+                    'status' => 'approved',
+                    'payload' => $payload,
+                    'reason' => $data['reason'],
                     'reviewed_by' => auth()->id(),
                     'reviewed_at' => now(),
                 ]);
-            }
-            else{
+            } else {
                 AttendanceRequest::create([
-                    'user_id'       => $attendance->user_id,
+                    'user_id' => $attendance->user_id,
                     'attendance_id' => $attendance->id,
-                    'break_id'      => null,
-                    'status'        => 'approved',
-                    'payload'       => $payload,
-                    'reason'        => $data['reason'],
-                    'reviewed_by'   => auth()->id(),
-                    'reviewed_at'   => now(),
+                    'break_id' => null,
+                    'status' => 'approved',
+                    'payload' => $payload,
+                    'reason' => $data['reason'],
+                    'reviewed_by' => auth()->id(),
+                    'reviewed_at' => now(),
                 ]);
             }
         });
 
         return redirect()->route('request.index');
     }
-
 
     // 出勤登録画面(一般ユーザー)
     public function userAttendance(Request $request)

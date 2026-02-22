@@ -12,7 +12,7 @@ class UserAttendanceDetailTest extends TestCase
     use RefreshDatabase;
 
     /** 詳細画面の名前がログインユーザー名になっている */
-    public function testDetailShowsLoggedInUserName(): void
+    public function test_detail_shows_logged_in_user_name(): void
     {
         $user = User::factory()->create([
             'name' => '山田 太郎',
@@ -31,7 +31,7 @@ class UserAttendanceDetailTest extends TestCase
     }
 
     /** 詳細画面の日付が選択した日付になっている */
-    public function testDetailShowSelectedDate(): void
+    public function test_detail_show_selected_date(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -49,7 +49,7 @@ class UserAttendanceDetailTest extends TestCase
     }
 
     /** 出勤・退勤の時間が打刻と一致している */
-    public function testDetailShowsStartAndEndTime(): void
+    public function test_detail_shows_start_and_end_time(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 

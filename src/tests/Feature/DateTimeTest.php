@@ -12,7 +12,7 @@ class DateTimeTest extends TestCase
     use RefreshDatabase;
 
     /** 現在の日時情報がUIと同じ形式で出力されている */
-    public function testCurrentDatetimeIsDisplayedInAttendancePage(): void
+    public function test_current_datetime_is_displayed_in_attendance_page(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 9, 0, 0));
 

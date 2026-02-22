@@ -2,20 +2,19 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
+use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    //会員登録後、認証メールが送信される
-    public function testEmailSentRegistration(): void
+    // 会員登録後、認証メールが送信される
+    public function test_email_sent_registration(): void
     {
         Notification::fake();
 
@@ -32,8 +31,8 @@ class EmailVerificationTest extends TestCase
         Notification::assertSentTo($user, VerifyEmail::class);
     }
 
-    //メール認証誘導画面で「認証はこちらから」ボタンを押下するとメール認証サイトに遷移する
-    public function testVerificationeMailAthenticationSite(): void
+    // メール認証誘導画面で「認証はこちらから」ボタンを押下するとメール認証サイトに遷移する
+    public function test_verificatione_mail_athentication_site(): void
     {
         config(['app.env' => 'local']);
 
@@ -47,8 +46,8 @@ class EmailVerificationTest extends TestCase
         $response->assertSee('http://localhost:8025');
     }
 
-    //認証リンクにアクセスすると認証完了し、勤怠登録画面へ遷移する
-    public function testEmailRedirectsProfileLink(): void
+    // 認証リンクにアクセスすると認証完了し、勤怠登録画面へ遷移する
+    public function test_email_redirects_profile_link(): void
     {
         $user = User::factory()->unverified()->create();
 
@@ -57,7 +56,7 @@ class EmailVerificationTest extends TestCase
             now()->addMinutes(60),
             [
                 'id' => $user->id,
-                'hash' => sha1($user->email),  //sha1はアドレスをハッシュ化すること
+                'hash' => sha1($user->email),  // sha1はアドレスをハッシュ化すること
             ]
         );
 
