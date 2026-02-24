@@ -42,6 +42,17 @@ jobs:
           cd src
           cp .env.example .env
 
+      - name: Setup SQLite
+        run: |
+          cd src
+          touch database/database.sqlite
+
+      - name: Configure .env
+        run: |
+          cd src
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=database\/database.sqlite/' .env
+
       - name: Generate key
         run: |
           cd src

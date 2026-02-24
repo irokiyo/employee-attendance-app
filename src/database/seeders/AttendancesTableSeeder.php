@@ -22,7 +22,7 @@ class AttendancesTableSeeder extends Seeder
                 ->value('id');
 
             if ($renaId) {
-                $period = CarbonPeriod::create('2023-06-01', '2023-06-30');
+                $period = CarbonPeriod::create('2025-12-01', '2025-12-31');
                 foreach ($period as $day) {
                     if ($day->isWeekend()) {
                         continue;
