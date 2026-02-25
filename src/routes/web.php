@@ -40,10 +40,12 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         ->name('admin.attendance.csv');
 
     // 修正申請承認画面（管理者）
-    Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [RequestController::class, 'adminRequestShow'])
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}',
+        [RequestController::class, 'adminRequestShow'])
         ->name('admin.request.show');
     // 修正申請更新（管理者）
-    Route::patch('/stamp_correction_request/approve/{attendance_correct_request_id}', [RequestController::class, 'adminRequestUpdate'])
+    Route::patch('/stamp_correction_request/approve/{attendance_correct_request_id}',
+        [RequestController::class, 'adminRequestUpdate'])
         ->name('request.update');
 });
 
