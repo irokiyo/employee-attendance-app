@@ -53,7 +53,7 @@ class AdminAttendanceListTest extends TestCase
     }
 
     /** 「前日」を押下した時に前の日の勤怠情報が表示される */
-    public function test_admin_can_open_previous_day(): void
+    public function testAdminCanOpenPreviousDay(): void
     {
         $admin = $this->adminUser();
 
@@ -72,7 +72,7 @@ class AdminAttendanceListTest extends TestCase
     }
 
     /** 「翌日」を押下した時に次の日の勤怠情報が表示される */
-    public function test_admin_can_open_next_day(): void
+    public function testAdminCanOpenNextDay(): void
     {
         $admin = $this->adminUser();
 
