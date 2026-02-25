@@ -3,7 +3,7 @@
 ## 環境構築
 
 ### Docker ビルド
-1. git clone https://github.com/irokiyo/employee-attendance-app.git market-clone  
+1. git clone https://github.com/irokiyo/employee-attendance-app.git attendance-clone  
 1. cd market-clone  
 1. docker-compose up -d --build  
 
