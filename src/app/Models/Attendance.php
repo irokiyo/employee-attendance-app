@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AttendanceRequest;
 
 class Attendance extends Model
 {
@@ -31,7 +32,7 @@ class Attendance extends Model
 
     public function request()
     {
-        return $this->hasMany(Request::class);
+        return $this->hasMany(AttendanceRequest::class);
     }
 
     public function breaks()

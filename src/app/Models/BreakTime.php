@@ -30,6 +30,6 @@ class BreakTime extends Model
 
     public function request()
     {
-        return $this->hasMany(Request::class);
+        return $this->hasMany(AttendanceRequest::class);
     }
 }
