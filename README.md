@@ -4,7 +4,7 @@
 
 ### Docker ビルド
 1. git clone https://github.com/irokiyo/employee-attendance-app.git attendance-clone  
-1. cd market-clone  
+1. cd attendance-clone  
 1. docker-compose up -d --build  
 
 ### Laravel 環境構築
@@ -50,10 +50,10 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 
 ## ログイン用初期データ  
--一般ユーザー
+### 一般ユーザー
 - メールアドレス: reina.n@coachtech.com  
 - パスワード: password  
--管理者
+### 管理者
 - メールアドレス: norio.n@coachtech.com  
 - パスワード: password  
 

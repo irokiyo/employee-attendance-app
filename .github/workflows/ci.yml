@@ -5,9 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src
+
     env:
       APP_ENV: testing
       DB_CONNECTION: mysql
@@ -45,20 +43,18 @@ jobs:
         run: composer install --no-progress --no-interaction --prefer-dist
 
       - name: Prepare testing env
-        env:
-          APP_ENV: testing
         run: |
           cp .env.example .env.testing
-          php artisan key:generate --env=testing
+          php artisan key:generate
 
       - name: Run migrations
-        run: php artisan migrate --force --env=testing
+        run: php artisan migrate --force
 
       - name: Run PHPUnit
-        run: php artisan test --env=testing
+        run: php artisan test
 
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse app bootstrap config database public resources routes tests
 
       - name: Run PHPCS
-        run: vendor/bin/phpcs --standard=phpcs.xml
+        run: vendor/bin/phpcs --standard=phpcs.xml app config database routes tests
