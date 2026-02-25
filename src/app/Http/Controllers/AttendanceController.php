@@ -27,7 +27,8 @@ class AttendanceController extends Controller
             ->orderBy('user_id')
             ->get();
         $attendances->each(function ($attendance) {
-            $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
+            $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)
+                ->format('H:i') : '';
             $attendance->end_label = $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '';
             $attendance->breaks->each(function ($break) {
                 $break->start_label = $break->break_start_time
@@ -123,8 +124,12 @@ class AttendanceController extends Controller
                 ->map(function ($br) {
                     return [
                         'break_id' => $br->id,
-                        'break_start_time' => $br->break_start_time ? Carbon::parse($br->break_start_time)->format('H:i:s') : null,
-                        'break_end_time' => $br->break_end_time ? Carbon::parse($br->break_end_time)->format('H:i:s') : null,
+                        'break_start_time'
+                            => $br->break_start_time ? Carbon::parse($br->break_start_time)
+                            ->format('H:i:s') : null,
+                        'break_end_time'
+                            => $br->break_end_time ? Carbon::parse($br->break_end_time)
+                            ->format('H:i:s') : null,
                     ];
                 })->toArray();
 
