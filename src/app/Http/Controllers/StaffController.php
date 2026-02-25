@@ -47,7 +47,7 @@ class StaffController extends Controller
             $a = $attendanceByDate->get($dateStr);
 
             $rows->push([
-                'date_label' => $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')',
+                'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
                 'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
                 'end_label' => $a?->end_time ? Carbon::parse($a->end_time)->format('H:i') : '',
                 'total_break_time' => $a?->total_break_time ?? '',
@@ -94,7 +94,7 @@ class StaffController extends Controller
             for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
                 $dateStr = $d->toDateString();
                 $a = $attendanceByDate->get($dateStr);
-                $dateLabel = $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')';
+                $dateLabel = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
                 $startLabel = $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
                 $endLabel = $a?->end_time ? Carbon::parse($a->end_time)->format('H:i') : '';
 

@@ -13,7 +13,7 @@ class AdminAttendanceDetailTest extends TestCase
     use RefreshDatabase;
 
     /** 勤怠詳細画面に表示されるデータが選択したものになっている */
-    public function test_attendance_details_screen_is_displayed_correctly()
+    public function testAttendanceDetailsScreenIsDisplayedCorrectly()
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -30,7 +30,7 @@ class AdminAttendanceDetailTest extends TestCase
     }
 
     /** 出勤時間が退勤時間より後になっている場合、エラーメッセージが表示される*/
-    public function test_start_time_after_end_time_shows_error(): void
+    public function testStartTimeAfterEndTimeShowsError(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -64,7 +64,7 @@ class AdminAttendanceDetailTest extends TestCase
     }
 
     /** 休憩開始時間が退勤時間より後になっている場合、エラーメッセージが表示される */
-    public function test_break_start_outside_work_time_shows_error(): void
+    public function testBreakStartOutsideWorkTimeShowsError(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',

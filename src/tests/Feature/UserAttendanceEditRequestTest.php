@@ -210,7 +210,7 @@ class UserAttendanceEditRequestTest extends TestCase
             'reason' => 'テスト申請',
         ]);
 
-        $response = $this->actingAs($user)->get($this->requestListPath.'?status=pending');
+        $response = $this->actingAs($user)->get($this->requestListPath . '?status=pending');
         $response->assertStatus(200);
 
         $response->assertSee("/attendance/detail/{$att1->id}");
@@ -267,7 +267,7 @@ class UserAttendanceEditRequestTest extends TestCase
             'reason' => 'テスト申請',
         ]);
 
-        $list = $this->actingAs($user)->get($this->requestListPath.'?status=pending');
+        $list = $this->actingAs($user)->get($this->requestListPath . '?status=pending');
         $list->assertStatus(200);
         $list->assertSee($this->attendanceDetailPath($attendance->id));
 
