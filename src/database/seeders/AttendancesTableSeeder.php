@@ -43,7 +43,6 @@ class AttendancesTableSeeder extends Seeder
 
             foreach ($otherUserIds as $userId) {
                 for ($i = 0; $i < 15; $i++) {
-
                     $day = Carbon::create(2023, 6, 1)->addDays(random_int(0, 29));
 
                     $startHour = random_int(7, 11);
