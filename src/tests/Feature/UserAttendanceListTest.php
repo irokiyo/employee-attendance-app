@@ -13,7 +13,7 @@ class UserAttendanceListTest extends TestCase
     use RefreshDatabase;
 
     /** 自分が行った勤怠情報が全て表示されている */
-    public function test_only_own_attendance_is_displayed(): void
+    public function testOnlyOwnAttendanceIsDisplayed(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
         $otherUser = User::factory()->create(['email_verified_at' => now()]);
@@ -40,7 +40,7 @@ class UserAttendanceListTest extends TestCase
     }
 
     /** 勤怠一覧画面に遷移した際に現在の月が表示される */
-    public function test_current_month_is_displayed(): void
+    public function testCurrentMonthIsDisplayed(): void
     {
         Carbon::setTestNow('2026-01-15');
 
@@ -53,7 +53,7 @@ class UserAttendanceListTest extends TestCase
     }
 
     /** [前月]を押した時に表示月の前月の情報が表示される */
-    public function test_previous_month_attendance_is_displayed(): void
+    public function testPreviousMonthAttendanceIsDisplayed(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -72,7 +72,7 @@ class UserAttendanceListTest extends TestCase
     }
 
     /** [翌月]を押した時に表示月の翌月の情報が表示される */
-    public function test_next_month_attendance_is_displayed(): void
+    public function testNextMonthAttendanceIsDisplayed(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -91,7 +91,7 @@ class UserAttendanceListTest extends TestCase
     }
 
     /** [詳細]ボタンを押すとその日の勤怠詳細画面へ遷移する */
-    public function test_detail_button_navigates_to_detail_page(): void
+    public function testDetailButtonNavigatesToDetailPage(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 

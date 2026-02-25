@@ -20,7 +20,7 @@ class UserLoginTest extends TestCase
 
     // emailのバリデーション
     /** @test */
-    public function test_login_email_validation()
+    public function testLoginEmailValidation()
     {
         $response = $this->from(route('login'))
             ->post(route('login'), $this->validData([
@@ -35,7 +35,7 @@ class UserLoginTest extends TestCase
     }
 
     // passwordのバリデーション
-    public function test_login_password_validation()
+    public function testLoginPasswordValidation()
     {
         $response = $this->from(route('login'))
             ->post(route('login'), $this->validData([
@@ -50,7 +50,7 @@ class UserLoginTest extends TestCase
     }
 
     // 入力情報が違うときのバリデーション
-    public function test_login_mismatch_validation()
+    public function testLoginMismatchValidation()
     {
         User::factory()->create([
             'email' => 'test@example.com',

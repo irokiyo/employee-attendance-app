@@ -21,7 +21,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 出勤時間が退勤時間より後ならエラー */
-    public function test_start_time_after_end_time_shows_error(): void
+    public function testStartTimeAfterEndTimeShowsError(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -50,7 +50,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 休憩開始が退勤より後ならエラー */
-    public function test_break_start_after_end_time_shows_error(): void
+    public function testBreakStartAfterEndTimeShowsError(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
         $attendance = Attendance::factory()->create([
@@ -76,7 +76,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 休憩終了が退勤より後ならエラー */
-    public function test_break_end_after_end_time_shows_error(): void
+    public function testBreakEndAfterEndTimeShowsError(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -105,7 +105,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 備考が未入力ならエラー */
-    public function test_reason_required_shows_error(): void
+    public function testReasonRequiredShowsError(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -131,7 +131,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 修正申請が実行され、requestsテーブルに保存 */
-    public function test_edit_request_is_created(): void
+    public function testEditRequestIsCreated(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -160,7 +160,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 「承認待ち」にログインユーザーが行った申請が全て表示されている */
-    public function test_pending_tab_shows_all_requests_of_logged_in_user(): void
+    public function testPendingTabShowsAllRequestsOfLoggedInUser(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -222,7 +222,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 「承認済み」に管理者が承認した修正申請が全て表示されている */
-    public function test_approved_tab_shows_all_requests_approved(): void
+    public function testApprovedTabShowsAllRequestsApproved(): void
     {
         $user = User::factory()->create(['email_verified_at' => now()]);
 
@@ -247,7 +247,7 @@ class UserAttendanceEditRequestTest extends TestCase
     }
 
     /** 各申請の「詳細」を押下すると勤怠詳細画面に遷移する */
-    public function test_detail_link_navigates_to_attendance_detail_page(): void
+    public function testDetailLinkNavigatesToAttendanceDetailPage(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 

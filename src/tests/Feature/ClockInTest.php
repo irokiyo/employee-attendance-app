@@ -13,7 +13,7 @@ class ClockInTest extends TestCase
     use RefreshDatabase;
 
     /** 出勤ボタンが正しく機能し、ステータスが勤務中（出勤中）になる */
-    public function test_clock_in_creates_attendance_and_status_changes(): void
+    public function testClockInCreatesAttendanceAndStatusChanges(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 9, 0, 0));
         $user = User::factory()->create(['email_verified_at' => now()]);
@@ -34,7 +34,7 @@ class ClockInTest extends TestCase
     }
 
     /** 出勤は一日一回のみ */
-    public function test_clock_in_button_is_not_shown_if_already_finished_today(): void
+    public function testClockInButtonIsNotShownIfAlreadyFinishedToday(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 18, 0, 0));
 
@@ -54,7 +54,7 @@ class ClockInTest extends TestCase
     }
 
     /** 出勤時刻が勤怠一覧画面で確認できる */
-    public function test_clock_in_t_time_is_visible_on_attendance_list(): void
+    public function testClockInTimeIsVisibleOnAttendanceList(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 9, 0, 0));
 

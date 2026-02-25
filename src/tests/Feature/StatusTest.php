@@ -18,7 +18,7 @@ class StatusTest extends TestCase
     }
 
     /** 勤務外の場合、勤怠ステータスが「勤務外」 */
-    public function test_status_off_duty_is_displayed(): void
+    public function testStatusOffDutyIsDisplayed(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 9, 0, 0));
 
@@ -29,7 +29,7 @@ class StatusTest extends TestCase
     }
 
     /** 出勤中の場合、勤怠ステータスが「出勤中」 */
-    public function test_status_working_is_displayed(): void
+    public function testStatusWorkingIsDisplayed(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 9, 0, 0));
 
@@ -49,7 +49,7 @@ class StatusTest extends TestCase
     }
 
     /** 休憩中の場合、勤怠ステータスが「休憩中」 */
-    public function test_status_on_break_is_displayed(): void
+    public function testStatusOnBreakIsDisplayed(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 12, 0, 0));
 
@@ -75,7 +75,7 @@ class StatusTest extends TestCase
     }
 
     /** 退勤済の場合、勤怠ステータスが「退勤済」 */
-    public function test_status_finished_is_displayed(): void
+    public function testStatusFinishedIsDisplayed(): void
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 29, 18, 0, 0));
 

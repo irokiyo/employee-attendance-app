@@ -21,7 +21,7 @@ class AdminStaffInfoTest extends TestCase
     }
 
     /** 管理者ユーザーが全一般ユーザーの「氏名」「メールアドレス」を確認できる */
-    public function test_admin_can_aee_all_users_name_and_email(): void
+    public function testAdminCanAeeAllUsersNameAndEmail(): void
     {
         $admin = $this->adminUser();
         $users = User::factory()->count(3)->create(['status' => 'user', 'email_verified_at' => now()]);
@@ -36,7 +36,7 @@ class AdminStaffInfoTest extends TestCase
     }
 
     /** ユーザーの勤怠情報が正しく表示される */
-    public function test_attendance_list_displays_correctly_for_selected_user(): void
+    public function testAttendanceListDisplaysCorrectlyForSelectedUser(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -59,7 +59,7 @@ class AdminStaffInfoTest extends TestCase
     }
 
     /** 「前月」を押下した時に表示月の前月の情報が表示される */
-    public function test_previous_month_attendance_is_displayed(): void
+    public function testPreviousMonthAttendanceIsDisplayed(): void
     {
         Carbon::setTestNow('2026-01-15 10:00:00');
 
@@ -85,7 +85,7 @@ class AdminStaffInfoTest extends TestCase
     }
 
     /** 「翌月」を押下した時に表示月の前月の情報が表示される */
-    public function test_next_month_attendance_is_displayed(): void
+    public function testNextMonthAttendanceIsDisplayed(): void
     {
         Carbon::setTestNow('2026-01-15 10:00:00');
 
@@ -111,7 +111,7 @@ class AdminStaffInfoTest extends TestCase
     }
 
     /** 「詳細」を押下すると、その日の勤怠詳細画面に遷移する */
-    public function test_detail_link_navigates_to_detail_page(): void
+    public function testDetailLinkNavigatesToDetailPage(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
