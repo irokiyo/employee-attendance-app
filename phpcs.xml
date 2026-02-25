@@ -13,4 +13,9 @@
     <exclude-pattern>database/migrations/*</exclude-pattern>
 
     <rule ref="PSR12"/>
+
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
 </ruleset>

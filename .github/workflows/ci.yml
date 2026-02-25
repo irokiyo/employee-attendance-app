@@ -61,4 +61,4 @@ jobs:
         run: vendor/bin/phpstan analyse app bootstrap config database public resources routes tests
 
       - name: Run PHPCS
-        run: vendor/bin/phpcs app config database routes tests
+        run: vendor/bin/phpcs --standard=phpcs.xml

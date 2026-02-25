@@ -98,7 +98,7 @@ class AdminAttendanceDetailTest extends TestCase
     }
 
     /** 休憩終了時間が退勤時間より後になっている場合、エラーメッセージが表示される */
-    public function test_break_end_after_end_time_shows_error(): void
+    public function testBreakEndAfterEndTimeShowsError(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',
@@ -132,7 +132,7 @@ class AdminAttendanceDetailTest extends TestCase
     }
 
     /** 備考欄が未入力の場合のエラーメッセージが表示される*/
-    public function test_reason_required_shows_error(): void
+    public function testReasonRequiredShowsError(): void
     {
         $admin = User::factory()->create([
             'status' => 'admin',

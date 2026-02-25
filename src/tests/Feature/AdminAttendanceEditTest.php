@@ -24,7 +24,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 承認待ちの修正申請が全て表示されている */
-    public function test_pending_shows_all_pending_requests(): void
+    public function testPendingShowsAllPendingRequests(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -79,7 +79,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 承認済みの修正申請が全て表示されている */
-    public function test_approved_shows_all_approved_requests(): void
+    public function testApprovedShowsAllApprovedRequests(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -112,7 +112,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 修正申請の詳細内容が正しく表示されている */
-    public function test_request_detail_contents_are_displayed_correctly(): void
+    public function testRequestDetailContentsAreDisplayedCorrectly(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -161,7 +161,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 修正申請の承認処理が正しく行われる */
-    public function test_approve_request_updates_attendance(): void
+    public function testApproveRequestUpdatesAttendance(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 

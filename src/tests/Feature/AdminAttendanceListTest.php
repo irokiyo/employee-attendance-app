@@ -21,7 +21,7 @@ class AdminAttendanceListTest extends TestCase
     }
 
     /** その日になされた全ユーザーの勤怠情報が正確に確認できる */
-    public function test_admin_can_see_all_users_attendance_of_the_day(): void
+    public function testAdminCanSeeAllUsersAttendanceOfTheDay(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -40,7 +40,7 @@ class AdminAttendanceListTest extends TestCase
     }
 
     /** 遷移した際に現在の日付が表示される */
-    public function test_admin_list_shows_current_date(): void
+    public function testAdminListShowsCurrentDate(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
