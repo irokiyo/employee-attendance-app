@@ -43,7 +43,7 @@
                 @enderror
             </div>
 
-            <button type="submit" class="btn">登録する</button>
+            <button type="submit" class="fortify__btn">登録する</button>
         </form>
 
         <a href="{{route('login')}}" class="link">ログインはこちら</a>

@@ -28,7 +28,7 @@
                 @enderror
             </div>
 
-            <button type="submit" class="btn">管理者ログインする</button>
+            <button type="submit" class="fortify__btn">管理者ログインする</button>
         </form>
     </div>
 </div>

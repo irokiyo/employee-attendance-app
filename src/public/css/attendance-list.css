@@ -17,6 +17,7 @@
 }
 .next-month{
     text-align: right;
+    gap: 8px;
 }
 .month-picker{
     position: relative;

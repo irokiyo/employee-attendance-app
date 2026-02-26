@@ -27,7 +27,7 @@
                 @enderror
             </div>
 
-            <button type="submit" class="btn">ログインする</button>
+            <button type="submit" class="fortify__btn">ログインする</button>
         </form>
 
         <a href="{{route('register')}}" class="link">会員登録はこちら</a>

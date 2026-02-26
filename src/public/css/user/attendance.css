@@ -10,17 +10,17 @@
     background: #d9d9d9;
     padding: 6px 14px;
     border-radius: 50px;
-    font-size: 12px;
+    font-size: 18px;
     margin-bottom: 24px;
 }
 .attendance-date {
-    font-size: 16px;
-    margin-bottom: 12px;
+    font-size: 40px;
+    margin: 12px 0 12px 0;
 }
 .attendance-time {
-    font-size: 64px;
+    font-size: 80px;
     font-weight: bold;
-    margin-bottom: 40px;
+    margin: 20px 0 20px 0;
 }
 .attendance-actions {
     display: flex;
@@ -50,5 +50,6 @@
     border: none;
 }
 .attendance-message {
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: bold;
 }

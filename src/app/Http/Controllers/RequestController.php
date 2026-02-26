@@ -105,13 +105,22 @@ class RequestController extends Controller
             ];
         })->toArray();
 
+        $breaks = $attendance->breaks ?? collect();
+        $oldBreaks = old('breaks', []);
+        $existingCount = $breaks->count();
+        $oldCount = is_array($oldBreaks) ? count($oldBreaks) : 0;
+        $displayCount = max($existingCount, $oldCount) + 1;
+
         return view('user.detail', compact(
             'attendance',
             'attendanceRequest',
             'isPending',
             'reqStart',
             'reqEnd',
-            'reqBreaks'
+            'reqBreaks',
+            'breaks',
+            'existingCount',
+            'displayCount',
         ));
     }
 

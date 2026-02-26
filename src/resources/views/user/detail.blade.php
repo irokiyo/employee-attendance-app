@@ -17,7 +17,7 @@
         <form action="{{route('user.request',['id' => $attendance->id])}}" method="POST" class="request-form">
             @csrf
             <input type="hidden" name="attendance_id" value="{{ $attendance->id }}">
-            <div class="card">
+            <div class="attendance-table">
                 <div class="table">
                     <div class="row">
                         <div class="row__head">名前</div>
@@ -50,43 +50,32 @@
                         @error('start_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
 
-                    @forelse ($attendance->breaks as $i => $break)
-                    <div class="row">
-                        <div class="row__head">
-                            休憩{{ $i === 0 ? '' : $i + 1 }}
-                        </div>
+                    @for ($i = 0; $i < $displayCount; $i++) @php $break=$breaks[$i] ?? null; $label=$i===0 ? '休憩' : '休憩' . ($i + 1); @endphp <div class="row">
+                        <div class="row__head">{{ $label }}</div>
+
                         <div class="cell value time">
                             @if($isPending)
                             <p class="time-character">{{ $reqBreaks[$i]['break_start_time'] ?? '' }}</p>
                             <span class="time__sep">〜</span>
                             <p class="time-character">{{ $reqBreaks[$i]['break_end_time'] ?? '' }}</p>
                             @else
+                            @if($break)
                             <input type="hidden" name="breaks[{{ $i }}][break_id]" value="{{ $break->id }}">
-                            <input type="text" class="input input--time" name="breaks[{{ $i }}][break_start_time]" value="{{ $break->start_label }}">
+                            @endif
+
+                            <input type="text" class="input input--time" name="breaks[{{ $i }}][break_start_time]" value="{{ old("breaks.$i.break_start_time", $break->start_label ?? '') }}">
+
                             <span class="time__sep">〜</span>
-                            <input type="text" class="input input--time" name="breaks[{{ $i }}][break_end_time]" value="{{ $break->end_label }}">
+
+                            <input type="text" class="input input--time" name="breaks[{{ $i }}][break_end_time]" value="{{ old("breaks.$i.break_end_time", $break->end_label ?? '') }}">
                             @endif
                         </div>
+
                         @error("breaks.$i.break_start_time") <p class="error-message">{{ $message }}</p> @enderror
-                    </div>
-                    @empty
-                    <div class="row">
-                        <div class="row__head">休憩</div>
-                        <div class="cell value time">
-                            @if($isPending)
-                            <p class="time-character">{{ $reqBreaks[0]['break_start_time'] ?? '' }}</p>
-                            <span class="time__sep">〜</span>
-                            <p class="time-character">{{ $reqBreaks[0]['break_end_time'] ?? '' }}</p>
-                            @else
-                            <input type="text" class="input input--time" name="breaks[0][break_start_time]" value="{{ old('breaks.0.break_start_time', $reqBreaks[0]['break_start_time'] ?? '') }}">
-                            <span class="time__sep">〜</span>
-                            <input type="text" class="input input--time" name="breaks[0][break_end_time]" value="{{ old('breaks.0.break_end_time', $reqBreaks[0]['break_end_time'] ?? '') }}" >
-                            @endif
+                        @error("breaks.$i.break_end_time") <p class="error-message">{{ $message }}</p> @enderror
                         </div>
-                        @error('breaks.0.break_start_time')<p class="error-message">{{ $message }}</p>@enderror
-                        @error('breaks.0.break_end_time') <p class="error-message">{{ $message }}</p> @enderror
-                    </div>
-                    @endforelse
+                        @endfor
+
 
                     <div class="row row--last">
                         <div class="row__head">備考</div>
