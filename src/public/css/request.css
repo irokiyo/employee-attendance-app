@@ -1,7 +1,3 @@
-.panel__bar {
-  font-weight: 900;
-}
-
 .tab {
   margin: 0 auto 18px;
   padding-top: 8px;
@@ -10,7 +6,6 @@
   text-align: left;
   position: relative;
 }
-
 .tab::after {
   content: "";
   position: absolute;
@@ -21,7 +16,6 @@
   background: #333;
   opacity: 0.5;
 }
-
 .tab--label {
   font-size: 13px;
   color: #333;
@@ -29,11 +23,9 @@
   padding: 8px 10px 12px;
   position: relative;
 }
-
 .tab--label.is-active {
   font-weight: 700;
 }
-
 .tab--label.is-active::after {
   content: "";
   position: absolute;
@@ -42,66 +34,4 @@
   bottom: -11px;
   height: 2px;
   background: #333;
-}
-
-.table-card {
-  width: 520px;
-  max-width: 100%;
-  margin: 24px auto 0;
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
-  overflow: hidden;
-}
-
-.table__head {
-  background: #fff;
-}
-
-.table__th,
-.table__td {
-  padding: 10px 12px;
-  font-size: 12px;
-  color: #333;
-  border-bottom: 1px solid #e9e9e9;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.table__th {
-  font-weight: 700;
-  color: #555;
-}
-
-.table__th--right,
-.table__td--right {
-  text-align: right;
-}
-
-.table__tr:last-child .table__td {
-  border-bottom: 0;
-}
-
-.table__td--empty {
-  text-align: center;
-  color: #777;
-  padding: 18px 12px;
-}
-
-/* ===== responsive ===== */
-@media (max-width: 600px) {
-  .topbar__inner {
-    padding: 0 14px;
-  }
-
-  .topbar__nav {
-    gap: 16px;
-  }
-
-  .table__th,
-  .table__td {
-    font-size: 11px;
-    padding: 9px 10px;
-  }
 }

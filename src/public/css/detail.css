@@ -2,30 +2,17 @@
     width: 100%;
 
 }
-.card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
-    padding: 0;
-    overflow: hidden;
-    width: 100%;
-    margin: 0 auto;
-}
-
 .row {
     display: grid;
     grid-template-columns: 250px 1fr;
     border-bottom: 3px solid #e6e6e6;
 }
-
 .row--last {
     border-bottom: none;
 }
-
 .cell {
     padding: 18px 200px 18px 18px;
 }
-
 .row__head {
     color: #666;
     font-size: 16px;
@@ -34,7 +21,6 @@
     padding: 30px 40px;
     font-weight: bold;
 }
-
 .cell.value {
     display: flex;
     align-items: center;
@@ -42,19 +28,15 @@
     justify-content: center;
     gap: 18px;
 }
-
 .text--bold {
     font-weight: 800;
 }
-
 .date {
     gap: 60px;
 }
-
 .date__item {
     min-width: 120px;
 }
-
 .input {
     height: 28px;
     border: 1px solid #dcdcdc;
@@ -63,37 +45,21 @@
     font-size: 13px;
     outline: none;
 }
-
 .input--time {
     text-align: center;
 }
-
 .time__sep {
     color: black;
     font-weight: 700;
     text-align: center;
     padding-top: 10px;
 }
-
-.textarea {
-    width: 320px;
-    max-width: 100%;
-    border: 1px solid #dcdcdc;
-    border-radius: 4px;
-    padding: 10px 10px;
-    font-size: 13px;
-    outline: none;
-    resize: none;
-}
-
-
 .actions {
     max-width: 720px;
     margin: 18px auto 0;
     display: flex;
     justify-content: flex-end;
 }
-
 .btn-gray{
     background: #696969;
     color: #fff;
@@ -104,7 +70,6 @@
     font-size: 14px;
     font-weight: 800;
 }
-
 .time-character{
     font-weight: bolder;
 }

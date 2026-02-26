@@ -1,11 +1,9 @@
 * {
     box-sizing: border-box;
 }
-
 body {
     margin: 0;
 }
-
 .header{
     display: flex;
     height: 80px;
@@ -62,7 +60,6 @@ body {
     padding: 0;
     text-decoration: none;
 }
-
 .logout{
     appearance: none;
     -webkit-appearance: none;
@@ -70,7 +67,6 @@ body {
 .logout:hover{
     text-decoration: underline;
 }
-
 .attendance-list {
     min-height: calc(100vh - 80px);
     background: #f2f2f2;
@@ -78,19 +74,10 @@ body {
     justify-content: center;
     padding: 48px 16px;
 }
-
 .attendance-list__inner {
     width: 100%;
     max-width: 760px;
 }
-
-.attendance-list__title {
-    font-size: 14px;
-    font-weight: 700;
-    margin: 0 0 14px;
-    color: #111;
-}
-
 .title{
     font-size: 36px;
     color: #000000;
@@ -128,18 +115,15 @@ body {
     text-decoration: none;
     text-align: center;
     width: 100%;
-    }
-
+}
 .link:hover {
     text-decoration: underline;
-    }
-
+}
 .error-message {
     color: red;
     font-size: 12px;
     margin-top: 3px;
-    }
-/* fortify画面の共通部分 */
+}
 label {
     font-size: 24px;
     font-weight: bold;
@@ -148,7 +132,6 @@ label {
     text-align: left;
     width: 100%;
 }
-
 input {
     height: 59px;
     width: 100%;
@@ -166,14 +149,12 @@ input {
     justify-content: center;
     width: 60%;
 }
-
 /* 各ページ共通部分 */
 .page__title{
     font-size: 30px;
     border-left: 8px solid #000;
     padding-left: 20px;
 }
-
 .attendance-nav {
     display: flex;
     justify-content: space-between;
@@ -181,19 +162,6 @@ input {
     background-color: #fff;
     border-radius: 10px;
 }
-
-.month__btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 34px;
-    padding: 30px 15px;
-    color: #737373;
-    text-decoration: none;
-    font-size: 12px;
-    gap: 6px;
-}
-
 .attendance-nav__label{
     display: inline-flex;
     align-items: center;
@@ -207,7 +175,6 @@ input {
     border: none;
     background-color: transparent;
 }
-
 .date-character{
     width: 20%;
     color: #737373;
@@ -248,17 +215,6 @@ input {
     text-align: center;
     border-bottom: 1px solid #efefef;
 }
-.detail-link {
-    color: #111;
-    text-decoration: none;
-    font-weight: 700;
-}
-
-.detail-link:hover {
-    text-decoration: underline;
-}
-
-
 @media (max-width: 768px) {
     .header__nav{
         width: 45%;
