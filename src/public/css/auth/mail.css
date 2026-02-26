@@ -1,0 +1,88 @@
+
+.verify-card {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;  
+}
+
+.verify-text {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #111;
+    margin: 40px 0 18px;
+    font-weight: bold;
+}
+
+.verify-status {
+    font-size: 12px;
+    color: #0a6b2b;
+    margin: 0 0 12px;
+}
+
+.verify-form {
+    margin: 0 0 14px;
+}
+
+.verify-button {
+    appearance: none;
+    border: 1px solid #777;
+    background: #d9d9d9;
+    color: #111;
+    font-size: 12px;
+    padding: 8px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.verify-button:hover {
+    filter: brightness(0.98);
+}
+
+.verify-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.verify-link {
+    font-size: 11px;
+    color: #1a73e8;
+    text-decoration: none;
+    border: none;
+    background-color: #fff;
+    margin-top: 30px;
+}
+
+.verify-link:hover {
+    text-decoration: underline;
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1540px) {
+    .verify-text {
+        font-size: 13px;
+    }
+
+    .verify-button {
+        font-size: 12px;
+        padding: 9px 26px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .verify-text {
+        font-size: 12px;
+        line-height: 1.9;
+    }
+
+    .verify-button {
+        font-size: 11px;
+        padding: 8px 20px;
+    }
+
+    .verify-link {
+        font-size: 10.5px;
+    }
+}

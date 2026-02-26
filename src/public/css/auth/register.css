@@ -2,3 +2,17 @@ body {
     background-color: #FFFFFF;
     margin: 0;
 }
+.fortify__btn{
+    width: 100%;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 26px;
+    cursor: pointer;
+    margin-top: 80px;
+}
+.fortify__btn:hover {
+    opacity: 0.9;
+}
