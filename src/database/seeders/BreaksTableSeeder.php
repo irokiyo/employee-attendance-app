@@ -34,7 +34,7 @@ class BreaksTableSeeder extends Seeder
 
             $attendanceIds = DB::table('attendances')
                 ->whereIn('user_id', $targetUserIds)
-                ->whereBetween('date', ['2023-06-01', '2023-06-30'])
+                ->whereBetween('date', ['2025-12-01', '2025-12-31'])
                 ->pluck('id')
                 ->toArray();
 

@@ -53,7 +53,6 @@ class RequestController extends Controller
         $attendance = Attendance::with('breaks')
             ->where('user_id', $userId)
             ->findOrFail($id);
-
         $date = $attendance->date ? Carbon::parse($attendance->date) : null;
         $attendance->year_label = $date ? $date->format('Y年') : '';
         $attendance->md_label = $date ? $date->format('n月j日') : '';

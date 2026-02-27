@@ -53,6 +53,7 @@ class AttendanceController extends Controller
     public function adminDetail($id)
     {
         $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
+
         $date = $attendance->date ? Carbon::parse($attendance->date) : null;
         $attendance->year_label = $date ? $date->format('Y年') : '';
         $attendance->md_label = $date ? $date->format('n月j日') : '';
