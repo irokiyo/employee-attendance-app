@@ -12,8 +12,7 @@
 
 <div class="attendance-list">
     <div class="page">
-        <h1 class="page__title">勤怠詳細</h1>
-
+        <h2 class="page__title">勤怠詳細</h2>
         <form action="{{route('request.update',['attendance_correct_request_id' => $attendanceRequest->id])}}" method="POST" class="request-form">
             @csrf
             @method('PATCH')
@@ -26,7 +25,6 @@
                             <span class="text--bold">{{ $attendance->user->name}}</span>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="row__head">日付</div>
                         <div class="cell value date">
@@ -34,7 +32,6 @@
                             <span class="date__item text--bold">{{ $attendance->md_label}}</span>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="row__head">出勤・退勤</div>
                         <div class="cell value time">
@@ -45,7 +42,6 @@
                             <p class="time-character">{{$reqEnd}}</p>
                         </div>
                     </div>
-
                     @forelse ($displayBreaks as $i => $b)
                     <div class="row">
                         <div class="row__head">
@@ -54,9 +50,7 @@
                         <div class="cell value time">
                             <input type="hidden" name="breaks[{{ $i }}][break_start_time]" value="{{ $b['break_start_time'] ?? '' }}">
                             <p class="time-character">{{ $b['break_start_time'] ?? '' }}</p>
-
                             <span class="time__sep">〜</span>
-
                             <input type="hidden" name="breaks[{{ $i }}][break_end_time]" value="{{ $b['break_end_time'] ?? '' }}">
                             <p class="time-character">{{ $b['break_end_time'] ?? '' }}</p>
                         </div>
@@ -71,8 +65,6 @@
                         </div>
                     </div>
                     @endforelse
-
-
                     <div class="row row--last">
                         <div class="row__head">備考</div>
                         <div class="cell value">
@@ -89,9 +81,9 @@
                 <button type="button" class="btn-gray">承認済み</button>
                 @endif
             </div>
+        </form>
     </div>
-    </form>
 </div>
-</div>
+
 @endsection
 

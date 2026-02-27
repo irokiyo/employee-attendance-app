@@ -18,7 +18,6 @@
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
-
             <div class="form-group">
                 <label for="email">メールアドレス</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}">
@@ -26,7 +25,6 @@
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
-
             <div class="form-group">
                 <label for="password">パスワード</label>
                 <input type="password" id="password" name="password">
@@ -34,7 +32,6 @@
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
-
             <div class="form-group">
                 <label for="password_confirm">確認用パスワード</label>
                 <input type="password" id="password_confirm" name="password_confirmation">
@@ -42,7 +39,6 @@
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
-
             <button type="submit" class="fortify__btn">登録する</button>
         </form>
 

@@ -23,7 +23,6 @@
                 </a>
                 <p class="date-character">前日</p>
             </div>
-
             <div class="month-nav__center">
                 <form action="{{ route('admin.index') }}" method="GET" class="month-form">
                     <label class="month-picker">
@@ -33,7 +32,6 @@
                 </form>
                 <p class="attendance-nav__label">{{ $currentDate }}</p>
             </div>
-
             <div class="next-month">
                 <p class="date-character">翌日</p>
                 <a class="month__btn" href="{{ route('admin.index', ['date' => $nextDate]) }}"><img src="{{ asset('/images/左矢印.png') }}" alt="矢印" class="arrow-right">
@@ -51,7 +49,6 @@
                     <th class="table__header">合計</th>
                     <th class="table__header">詳細</th>
                 </tr>
-
                 @foreach($attendances as $attendance)
                 <tr>
                     <td class="table__item">{{ $attendance->user->name }}</td>

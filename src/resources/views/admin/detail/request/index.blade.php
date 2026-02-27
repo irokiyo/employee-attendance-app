@@ -13,9 +13,7 @@
 @section('content')
 <div class="attendance-list">
     <div class="attendance-list__inner">
-
         <h2 class="page__title">申請一覧</h2>
-
         <div class="tab">
             <a class="tab--label {{ $status==='pending' ? 'is-active' : '' }}" href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}">
                 承認待ち
@@ -24,7 +22,6 @@
                 承認済み
             </a>
         </div>
-
         <div class="attendance-table">
             <table class="table">
                 <tr class="table__row">
@@ -35,7 +32,6 @@
                     <th class="table__header">申請日時</th>
                     <th class="table__header">詳細</th>
                 </tr>
-
                 @foreach($reqs as $req)
                 <tr>
                     <td class="table__item">{{ $req->status_label }}</td>

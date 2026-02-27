@@ -12,8 +12,7 @@
 <div class="attendance-list">
     <div class="attendance-list__inner">
 
-        <h2 class="page__title">{{ $user->name }}さんの勤怠
-        </h2>
+        <h2 class="page__title">{{ $user->name }}さんの勤怠</h2>
 
         <div class="attendance-nav">
             <div class="prev-month">
@@ -22,7 +21,6 @@
                 </a>
                 <p class="date-character">前月</p>
             </div>
-
             <div class="month-nav__center">
                 <form action="{{ route('admin.attendance.show',['id' => $user->id]) }}" method="GET" class="month-form">
                     <label class="month-picker">
@@ -32,7 +30,6 @@
                 </form>
                 <p class="attendance-nav__label">{{ $currentMonthLabel }}</p>
             </div>
-
             <div class="next-month">
                 <p class="date-character">翌月</p>
                 <a class="month__btn" href="{{ route('admin.attendance.show', ['id' => $user->id,'month' => $nextMonth]) }}">
@@ -51,7 +48,6 @@
                     <th class="table__header">合計</th>
                     <th class="table__header">詳細</th>
                 </tr>
-
                 @foreach($rows as $row)
                 <tr>
                     <td class="table__item">{{ $row['date_label']}}</td>

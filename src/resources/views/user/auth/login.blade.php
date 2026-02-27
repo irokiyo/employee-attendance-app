@@ -18,7 +18,6 @@
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
-
             <div class="form-group">
                 <label for="password">パスワード</label>
                 <input type="password" id="password" name="password">
@@ -26,7 +25,6 @@
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
-
             <button type="submit" class="fortify__btn">ログインする</button>
         </form>
 

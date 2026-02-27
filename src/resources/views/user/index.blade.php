@@ -21,7 +21,6 @@
                 </a>
                 <p class="date-character">前月</p>
             </div>
-
             <div class="month-nav__center">
                 <form action="{{ route('user.index') }}" method="GET" class="month-form">
                     <label class="month-picker">
@@ -31,7 +30,6 @@
                 </form>
                 <p class="attendance-nav__label">{{ $currentMonthLabel }}</p>
             </div>
-
             <div class="next-month">
                 <p class="date-character">翌月</p>
                 <a class="month__btn" href="{{ route('user.index', ['month' => $nextMonth]) }}">
@@ -59,11 +57,11 @@
                     <td class="table__item">{{ $row['total_break_time'] }}</td>
                     <td class="table__item">{{ $row['total_time']}}</td>
                     <td class="table__item">
-                    @if($row['attendance_id'])
+                        @if($row['attendance_id'])
                         <a class="detail-link" href="{{route('user.detail',['id' => $row['attendance_id']])}}">
                             詳細
                         </a>
-                    @endif
+                        @endif
                     </td>
                 </tr>
                 @endforeach

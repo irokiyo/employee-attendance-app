@@ -11,10 +11,8 @@
 @section('content')
 <div class="attendance-list">
     <div class="attendance-list__inner">
-
         <div class="page">
             <h2 class="page__title">スタッフ一覧</h2>
-
             <div class="attendance-table">
                 <table class="table">
                     <tr class="row">
@@ -22,7 +20,6 @@
                         <th class="table__header">メールアドレス</th>
                         <th class="table__header">月次勤怠</th>
                     </tr>
-
                     <tr class="row">
                         @foreach($users as $user)
                         <td class="table__item">{{ $user->name }}</td>

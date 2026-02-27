@@ -12,7 +12,7 @@
 
 <div class="attendance-list">
     <div class="page">
-        <h1 class="page__title">勤怠詳細</h1>
+        <h2 class="page__title">勤怠詳細</h2>
 
         <form action="{{route('user.request',['id' => $attendance->id])}}" method="POST" class="request-form">
             @csrf
@@ -50,8 +50,7 @@
                         @error('start_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
 
-                    @for ($i = 0; $i < $displayCount; $i++)
-                    @php $break=$breaks[$i] ?? null; $label=$i===0 ? '休憩' : '休憩' . ($i + 1);
+                    @for ($i = 0; $i < $displayCount; $i++) @php $break=$breaks[$i] ?? null; $label=$i===0 ? '休憩' : '休憩' . ($i + 1);
                     @endphp
                     <div class="row">
                         <div class="row__head">{{ $label }}</div>
@@ -76,8 +75,8 @@
 
                         @error("breaks.$i.break_start_time") <p class="error-message">{{ $message }}</p> @enderror
                         @error("breaks.$i.break_end_time") <p class="error-message">{{ $message }}</p> @enderror
-                        </div>
-                        @endfor
+                    </div>
+                    @endfor
 
                     <div class="row row--last">
                         <div class="row__head">備考</div>
@@ -94,7 +93,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="actions">
                 @if($isPending)
                 <p class="error-message">*承認待ちのため修正はできません。</p>
@@ -106,4 +104,3 @@
     </div>
 </div>
 @endsection
-

@@ -28,7 +28,6 @@
             </a>
         </div>
 
-
         <div class="attendance-table">
             <table class="table">
                 <tr class="table__row">
@@ -64,8 +63,5 @@
         </div>
     </div>
 </div>
-
-
-
 @endsection
 
