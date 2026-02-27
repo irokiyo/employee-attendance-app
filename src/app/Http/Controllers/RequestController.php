@@ -239,6 +239,14 @@ class RequestController extends Controller
                 : '',
             ];
         })->toArray();
+        $displayBreaks = collect($reqBreaks ?? [])
+        ->filter(function ($b) {
+            $s = $b['break_start_time'] ?? '';
+            $e = $b['break_end_time'] ?? '';
+            return trim((string)$s) !== '' || trim((string)$e) !== '';
+        })
+        ->values();
+
 
         return view('admin.detail.request.show', compact(
             'attendance',
@@ -246,7 +254,8 @@ class RequestController extends Controller
             'isPending',
             'reqStart',
             'reqEnd',
-            'reqBreaks'
+            'reqBreaks',
+            'displayBreaks'
         ));
     }
 
