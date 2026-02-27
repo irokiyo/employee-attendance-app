@@ -12,7 +12,7 @@
 
 <div class="attendance-list">
     <div class="page">
-        <h1 class="page__title">勤怠詳細</h1>
+        <h2 class="page__title">勤怠詳細</h2>
 
         <form action="{{route('admin.detail.save',['id' => $attendance->id])}}" method="POST" class="request-form">
             @csrf

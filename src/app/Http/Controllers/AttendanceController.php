@@ -17,10 +17,8 @@ class AttendanceController extends Controller
     {
         $day = $request->input('date', now()->toDateString());
         $current = Carbon::createFromFormat('Y-m-d', $day);
-
         $prevDate = $current->copy()->subDay()->format('Y-m-d');
         $nextDate = $current->copy()->addDay()->format('Y-m-d');
-
         $attendances = Attendance::query()
             ->with(['user', 'breaks'])
             ->whereDate('date', $current->toDateString())
@@ -53,7 +51,6 @@ class AttendanceController extends Controller
     public function adminDetail($id)
     {
         $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
-
         $date = $attendance->date ? Carbon::parse($attendance->date) : null;
         $attendance->year_label = $date ? $date->format('Y年') : '';
         $attendance->md_label = $date ? $date->format('n月j日') : '';
@@ -63,7 +60,6 @@ class AttendanceController extends Controller
             $break->start_label = $break->break_start_time
                 ? Carbon::parse($break->break_start_time)->format('H:i')
                 : '';
-
             $break->end_label = $break->break_end_time
                 ? Carbon::parse($break->break_end_time)->format('H:i')
                 : '';
@@ -101,14 +97,11 @@ class AttendanceController extends Controller
         $end = ! empty($data['end_time'])
             ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
             : null;
-
         DB::transaction(function () use ($attendance, $data, $start, $end) {
-
             $attendance->update([
                 'start_time' => $start,
                 'end_time' => $end,
             ]);
-
             $sent = collect($data['breaks'] ?? []);
             $keptIds = [];
             foreach ($sent as $b) {
@@ -132,11 +125,9 @@ class AttendanceController extends Controller
                     $keptIds[] = $new->id;
                 }
             }
-
             if (array_key_exists('breaks', $data)) {
                 $attendance->breaks()->whereNotIn('id', $keptIds)->delete();
             }
-
             $freshBreaks = $attendance->breaks()
                 ->orderBy('id')
                 ->get(['id', 'break_start_time', 'break_end_time'])
@@ -151,17 +142,14 @@ class AttendanceController extends Controller
                             ->format('H:i:s') : null,
                     ];
                 })->toArray();
-
             $payload = [
                 'start_time' => $start,
                 'end_time' => $end,
                 'breaks' => $freshBreaks,
             ];
-
             $req = AttendanceRequest::where('attendance_id', $attendance->id)
                 ->where('status', 'pending')
                 ->first();
-
             if ($req) {
                 $req->update([
                     'status' => 'approved',
@@ -191,25 +179,19 @@ class AttendanceController extends Controller
     public function userAttendance(Request $request)
     {
         $userId = auth()->id();
-
         $attendance = Attendance::where('user_id', $userId)
             ->whereDate('date', today())
             ->first();
-
         $latestBreak = $attendance ? $attendance->breaks()->latest('id')->first() : null;
-
         $isBreak = $latestBreak && is_null($latestBreak->break_end_time);
-
         if ($request->isMethod('post')) {
             $action = $request->input('action');
-
             if ($action === 'start') {
                 Attendance::firstOrCreate(
                     ['user_id' => $userId, 'date' => today()],
                     ['start_time' => now()->format('H:i:s')]
                 );
             }
-
             if ($action === 'break_start' && $attendance && ! $attendance->end_time) {
                 if (! $isBreak) {
                     BreakTime::create([
@@ -218,7 +200,6 @@ class AttendanceController extends Controller
                     ]);
                 }
             }
-
             if ($action === 'break_end' && $attendance) {
                 if ($isBreak) {
                     $latestBreak->update([
@@ -226,17 +207,14 @@ class AttendanceController extends Controller
                     ]);
                 }
             }
-
             if ($action === 'end' && $attendance && ! $attendance->end_time) {
                 if ($isBreak) {
                     $latestBreak->update(['break_end_time' => now()->format('H:i:s')]);
                 }
                 $attendance->update(['end_time' => now()->format('H:i:s')]);
             }
-
             return redirect()->route('user.attendance');
         }
-
         if (! $attendance) {
             $status = 'outside';
         } elseif ($attendance->end_time) {
@@ -259,18 +237,13 @@ class AttendanceController extends Controller
     public function userIndex(Request $request)
     {
         $userId = auth()->id();
-
         $month = $request->input('month', now()->format('Y-m'));
         $current = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
-
         $start = $current->copy()->startOfMonth();
         $end = $current->copy()->endOfMonth();
-
         $prevMonth = $current->copy()->subMonth()->format('Y-m');
         $nextMonth = $current->copy()->addMonth()->format('Y-m');
-
         $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-
         $attendances = Attendance::query()
             ->where('user_id', $userId)
             ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
@@ -285,9 +258,7 @@ class AttendanceController extends Controller
 
                 return $a;
             });
-
         $attendanceByDate = $attendances->keyBy(fn ($a) => Carbon::parse($a->date)->toDateString());
-
         $rows = collect();
         for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
             $dateStr = $d->toDateString();

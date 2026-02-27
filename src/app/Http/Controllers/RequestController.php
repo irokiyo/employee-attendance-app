@@ -292,4 +292,131 @@ class RequestController extends Controller
 
         return redirect()->route('request.index');
     }
+    // 勤怠詳細画面（管理者）
+    public function adminDetail($id)
+    {
+        $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
+        $date = $attendance->date ? Carbon::parse($attendance->date) : null;
+        $attendance->year_label = $date ? $date->format('Y年') : '';
+        $attendance->md_label = $date ? $date->format('n月j日') : '';
+        $attendance->start_label = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
+        $attendance->end_label = $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '';
+        $attendance->breaks->each(function ($break) {
+            $break->start_label = $break->break_start_time
+                ? Carbon::parse($break->break_start_time)->format('H:i')
+                : '';
+            $break->end_label = $break->break_end_time
+                ? Carbon::parse($break->break_end_time)->format('H:i')
+                : '';
+        });
+        $breaks = $attendance->breaks ?? collect();
+        $oldBreaks = old('breaks', []);
+        $filledOldCount = 0;
+        if (is_array($oldBreaks)) {
+            $filtered = array_values(array_filter($oldBreaks, function ($b) {
+            $s = $b['break_start_time'] ?? '';
+            $e = $b['break_end_time'] ?? '';
+            return trim((string)$s) !== '' || trim((string)$e) !== '';
+            }));
+            $filledOldCount = count($filtered);
+        }
+        $displayCount = max($breaks->count(), $filledOldCount) + 1;
+        $maxBreaks = 5;
+        $displayCount = min($displayCount, $maxBreaks);
+
+        return view('admin.detail.show', compact(
+            'attendance',
+            'breaks',
+            'displayCount'
+        ));
+    }
+
+    // 勤怠詳細修正登録（管理者）
+    public function adminDetailSave(AttendanceRequestRequest $request, $id)
+    {
+        $data = $request->validated();
+        $attendance = Attendance::with('breaks')->findOrFail($id);
+        $start = ! empty($data['start_time'])
+            ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
+            : null;
+        $end = ! empty($data['end_time'])
+            ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
+            : null;
+        DB::transaction(function () use ($attendance, $data, $start, $end) {
+            $attendance->update([
+                'start_time' => $start,
+                'end_time' => $end,
+            ]);
+            $sent = collect($data['breaks'] ?? []);
+            $keptIds = [];
+            foreach ($sent as $b) {
+                $bs = $b['break_start_time'] ?? null;
+                $be = $b['break_end_time'] ?? null;
+
+                if (empty($bs) && empty($be)) {
+                    continue;
+                }
+
+                $breakPayload = [
+                    'break_start_time' => ! empty($bs) ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s') : null,
+                    'break_end_time' => ! empty($be) ? Carbon::createFromFormat('H:i', $be)->format('H:i:s') : null,
+                ];
+
+                if (! empty($b['break_id'])) {
+                    $attendance->breaks()->where('id', $b['break_id'])->update($breakPayload);
+                    $keptIds[] = (int) $b['break_id'];
+                } else {
+                    $new = $attendance->breaks()->create($breakPayload);
+                    $keptIds[] = $new->id;
+                }
+            }
+            if (array_key_exists('breaks', $data)) {
+                $attendance->breaks()->whereNotIn('id', $keptIds)->delete();
+            }
+            $freshBreaks = $attendance->breaks()
+                ->orderBy('id')
+                ->get(['id', 'break_start_time', 'break_end_time'])
+                ->map(function ($br) {
+                    return [
+                        'break_id' => $br->id,
+                        'break_start_time'
+                            => $br->break_start_time ? Carbon::parse($br->break_start_time)
+                            ->format('H:i:s') : null,
+                        'break_end_time'
+                            => $br->break_end_time ? Carbon::parse($br->break_end_time)
+                            ->format('H:i:s') : null,
+                    ];
+                })->toArray();
+            $payload = [
+                'start_time' => $start,
+                'end_time' => $end,
+                'breaks' => $freshBreaks,
+            ];
+            $req = AttendanceRequest::where('attendance_id', $attendance->id)
+                ->where('status', 'pending')
+                ->first();
+            if ($req) {
+                $req->update([
+                    'status' => 'approved',
+                    'payload' => $payload,
+                    'reason' => $data['reason'],
+                    'reviewed_by' => auth()->id(),
+                    'reviewed_at' => now(),
+                ]);
+            } else {
+                AttendanceRequest::create([
+                    'user_id' => $attendance->user_id,
+                    'attendance_id' => $attendance->id,
+                    'break_id' => null,
+                    'status' => 'approved',
+                    'payload' => $payload,
+                    'reason' => $data['reason'],
+                    'reviewed_by' => auth()->id(),
+                    'reviewed_at' => now(),
+                ]);
+            }
+        });
+
+        return redirect()->route('request.index');
+    }
 }

@@ -12,9 +12,9 @@
 <div class="attendance-list">
     <div class="attendance-list__inner">
 
-        <h1 class="page__title">
+        <h2 class="page__title">
             {{ $currentDate }}の勤怠
-        </h1>
+        </h2>
 
         <div class="attendance-nav">
             <div class="prev-month">
