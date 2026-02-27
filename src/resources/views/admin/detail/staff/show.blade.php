@@ -71,7 +71,7 @@
             </table>
         </div>
         <div class="actions">
-            <a class="btn" href="{{ route('admin.attendance.csv', ['id' => $user->id, 'month' => request('month', now()->format('Y-m'))]) }}">
+            <a class="csv-btn" href="{{ route('admin.attendance.csv', ['id' => $user->id, 'month' => request('month', now()->format('Y-m'))]) }}">
                 CSV出力
             </a>
         </div>

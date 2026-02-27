@@ -68,3 +68,22 @@
 .detail-link:hover {
     text-decoration: underline;
 }
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+.csv-btn{
+    width: 20%;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-size: 22px;
+    cursor: pointer;
+    margin-top: 20px;
+    text-decoration: none;
+}
+.csv-btn:hover {
+    opacity: 0.9;
+}

@@ -18,7 +18,7 @@
             @csrf
             @method('PATCH')
             <input type="hidden" name="attendance_id" value="{{ $attendance->id }}">
-            <div class="card">
+            <div class="attendance-table">
                 <div class="table">
                     <div class="row">
                         <div class="row__head">名前</div>

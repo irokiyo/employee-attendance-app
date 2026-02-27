@@ -107,9 +107,18 @@ class RequestController extends Controller
 
         $breaks = $attendance->breaks ?? collect();
         $oldBreaks = old('breaks', []);
+        $filledOldCount = 0;
+        if (is_array($oldBreaks)) {
+            $filtered = array_values(array_filter($oldBreaks, function ($b) {
+            $s = $b['break_start_time'] ?? '';
+            $e = $b['break_end_time'] ?? '';
+            return trim((string)$s) !== '' || trim((string)$e) !== '';
+            }));
+            $filledOldCount = count($filtered);
+        }
         $existingCount = $breaks->count();
         $oldCount = is_array($oldBreaks) ? count($oldBreaks) : 0;
-        $displayCount = max($existingCount, $oldCount) + 1;
+        $displayCount = max($breaks->count(), $filledOldCount) + 1;
 
         return view('user.detail', compact(
             'attendance',
@@ -121,6 +130,7 @@ class RequestController extends Controller
             'breaks',
             'existingCount',
             'displayCount',
+            'filledOldCount'
         ));
     }
 

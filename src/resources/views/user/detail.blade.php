@@ -50,7 +50,10 @@
                         @error('start_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
 
-                    @for ($i = 0; $i < $displayCount; $i++) @php $break=$breaks[$i] ?? null; $label=$i===0 ? '休憩' : '休憩' . ($i + 1); @endphp <div class="row">
+                    @for ($i = 0; $i < $displayCount; $i++)
+                    @php $break=$breaks[$i] ?? null; $label=$i===0 ? '休憩' : '休憩' . ($i + 1);
+                    @endphp
+                    <div class="row">
                         <div class="row__head">{{ $label }}</div>
 
                         <div class="cell value time">
@@ -75,7 +78,6 @@
                         @error("breaks.$i.break_end_time") <p class="error-message">{{ $message }}</p> @enderror
                         </div>
                         @endfor
-
 
                     <div class="row row--last">
                         <div class="row__head">備考</div>

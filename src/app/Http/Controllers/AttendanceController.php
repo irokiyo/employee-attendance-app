@@ -67,8 +67,26 @@ class AttendanceController extends Controller
                 ? Carbon::parse($break->break_end_time)->format('H:i')
                 : '';
         });
+        $breaks = $attendance->breaks ?? collect();
+        $oldBreaks = old('breaks', []);
+        $filledOldCount = 0;
+        if (is_array($oldBreaks)) {
+            $filtered = array_values(array_filter($oldBreaks, function ($b) {
+            $s = $b['break_start_time'] ?? '';
+            $e = $b['break_end_time'] ?? '';
+            return trim((string)$s) !== '' || trim((string)$e) !== '';
+            }));
+            $filledOldCount = count($filtered);
+        }
+        $displayCount = max($breaks->count(), $filledOldCount) + 1;
+        $maxBreaks = 5;
+        $displayCount = min($displayCount, $maxBreaks);
 
-        return view('admin.detail.show', compact('attendance'));
+        return view('admin.detail.show', compact(
+            'attendance',
+            'breaks',
+            'displayCount'
+        ));
     }
 
     // 勤怠詳細修正登録（管理者）
