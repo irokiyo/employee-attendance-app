@@ -18,14 +18,11 @@ class RequestController extends Controller
         $status = $request->query('status', 'pending');
         $query = AttendanceRequest::with(['user', 'attendance'])
             ->latest();
-
         if ($user->status == 'user') {
             $query->where('user_id', $user->id);
         }
-
         $query->where('status', $status);
         $reqs = $query->get();
-
         $reqs->transform(function ($r) {
             $r->status_label = match ($r->status) {
                 'pending' => '承認待ち',
@@ -35,7 +32,6 @@ class RequestController extends Controller
             };
             $r->attendance_time = $r->attendance->date ? Carbon::parse($r->attendance->date)->format('Y/m/d') : '';
             $r->request_time = $r->created_at ? Carbon::parse($r->created_at)->format('Y/m/d') : '';
-
             return $r;
         });
 
@@ -62,31 +58,24 @@ class RequestController extends Controller
             $break->start_label = $break->break_start_time
                 ? Carbon::parse($break->break_start_time)->format('H:i')
                 : '';
-
             $break->end_label = $break->break_end_time
                 ? Carbon::parse($break->break_end_time)->format('H:i')
                 : '';
         });
-
         $attendanceRequest = AttendanceRequest::where('attendance_id', $attendance->id)
             ->where('user_id', $userId)
             ->latest()
             ->first();
-
         $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
-
         $payload = $attendanceRequest->payload ?? [];
         $reqStart = $payload['start_time'] ?? '';
         $reqEnd = $payload['end_time'] ?? '';
-
         $reqStart = ! empty($payload['start_time'])
             ? Carbon::parse($payload['start_time'])->format('H:i')
             : '';
-
         $reqEnd = ! empty($payload['end_time'])
             ? Carbon::parse($payload['end_time'])->format('H:i')
             : '';
-
         $rawBreaks = [];
         if (isset($payload['break']) && is_array($payload['break'])) {
             $rawBreaks = [$payload['break']];
@@ -103,7 +92,6 @@ class RequestController extends Controller
                 : '',
             ];
         })->toArray();
-
         $breaks = $attendance->breaks ?? collect();
         $oldBreaks = old('breaks', []);
         $filledOldCount = 0;
@@ -137,7 +125,6 @@ class RequestController extends Controller
     public function userRequest(AttendanceRequestRequest $request, $id)
     {
         $data = $request->validated();
-
         $start = ! empty($data['start_time'])
         ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
         : null;
@@ -149,11 +136,9 @@ class RequestController extends Controller
             foreach ($data['breaks'] as $b) {
                 $bs = $b['break_start_time'] ?? null;
                 $be = $b['break_end_time'] ?? null;
-
                 if (empty($bs) && empty($be)) {
                     continue;
                 }
-
                 $breaksPayload[] = [
                     'break_id' => $b['break_id'] ?? null,
                     'break_start_time' => ! empty($bs)
@@ -165,13 +150,11 @@ class RequestController extends Controller
                 ];
             }
         }
-
         $payload = [
             'start_time' => $start,
             'end_time' => $end,
             'breaks' => $breaksPayload,
         ];
-
         AttendanceRequest::create([
             'user_id' => auth()->id(),
             'attendance_id' => $id,
@@ -192,7 +175,6 @@ class RequestController extends Controller
         $attendanceRequest = AttendanceRequest::with(['user', 'attendance.breaks'])
             ->findOrFail($attendance_correct_request_id);
         $attendance = $attendanceRequest->attendance;
-
         $date = $attendance->date ? Carbon::parse($attendance->date) : null;
         $attendance->year_label = $date ? $date->format('Y年') : '';
         $attendance->md_label = $date ? $date->format('n月j日') : '';
@@ -202,26 +184,21 @@ class RequestController extends Controller
             $break->start_label = $break->break_start_time
                 ? Carbon::parse($break->break_start_time)->format('H:i')
                 : '';
-
             $break->end_label = $break->break_end_time
                 ? Carbon::parse($break->break_end_time)->format('H:i')
                 : '';
         });
 
         $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
-
         $payload = $attendanceRequest->payload ?? [];
         $reqStart = $payload['start_time'] ?? '';
         $reqEnd = $payload['end_time'] ?? '';
-
         $reqStart = ! empty($payload['start_time'])
             ? Carbon::parse($payload['start_time'])->format('H:i')
             : '';
-
         $reqEnd = ! empty($payload['end_time'])
             ? Carbon::parse($payload['end_time'])->format('H:i')
             : '';
-
         $rawBreaks = [];
         if (isset($payload['break']) && is_array($payload['break'])) {
             $rawBreaks = [$payload['break']];
@@ -246,7 +223,6 @@ class RequestController extends Controller
         })
         ->values();
 
-
         return view('admin.detail.request.show', compact(
             'attendance',
             'attendanceRequest',
@@ -264,15 +240,12 @@ class RequestController extends Controller
         $reviewedBy = auth()->id();
         $reviewedAt = now();
         $req = AttendanceRequest::with(['attendance', 'attendance.breaks'])->findOrFail($attendance_correct_request_id);
-
         DB::transaction(function () use ($req, $reviewedBy, $reviewedAt) {
-
             $req->update([
                 'status' => 'approved',
                 'reviewed_by' => $reviewedBy,
                 'reviewed_at' => $reviewedAt,
             ]);
-
             $payload = $req->payload ?? [];
             $req->attendance->update([
                 'start_time' => $payload['start_time'] ?? $req->attendance->start_time,
@@ -280,7 +253,6 @@ class RequestController extends Controller
             ]);
             if (! empty($payload['breaks']) && is_array($payload['breaks'])) {
                 $req->attendance->breaks()->delete();
-
                 foreach ($payload['breaks'] as $b) {
                     $req->attendance->breaks()->create([
                         'break_start_time' => $b['break_start_time'] ?? null,
@@ -352,16 +324,13 @@ class RequestController extends Controller
             foreach ($sent as $b) {
                 $bs = $b['break_start_time'] ?? null;
                 $be = $b['break_end_time'] ?? null;
-
                 if (empty($bs) && empty($be)) {
                     continue;
                 }
-
                 $breakPayload = [
                     'break_start_time' => ! empty($bs) ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s') : null,
                     'break_end_time' => ! empty($be) ? Carbon::createFromFormat('H:i', $be)->format('H:i:s') : null,
                 ];
-
                 if (! empty($b['break_id'])) {
                     $attendance->breaks()->where('id', $b['break_id'])->update($breakPayload);
                     $keptIds[] = (int) $b['break_id'];

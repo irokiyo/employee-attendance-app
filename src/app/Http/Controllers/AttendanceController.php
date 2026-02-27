@@ -107,16 +107,13 @@ class AttendanceController extends Controller
             foreach ($sent as $b) {
                 $bs = $b['break_start_time'] ?? null;
                 $be = $b['break_end_time'] ?? null;
-
                 if (empty($bs) && empty($be)) {
                     continue;
                 }
-
                 $breakPayload = [
                     'break_start_time' => ! empty($bs) ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s') : null,
                     'break_end_time' => ! empty($be) ? Carbon::createFromFormat('H:i', $be)->format('H:i:s') : null,
                 ];
-
                 if (! empty($b['break_id'])) {
                     $attendance->breaks()->where('id', $b['break_id'])->update($breakPayload);
                     $keptIds[] = (int) $b['break_id'];
@@ -252,10 +249,8 @@ class AttendanceController extends Controller
             ->map(function ($a) use ($weekdays) {
                 $d = Carbon::parse($a->date);
                 $a->date_label = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
-
                 $a->start_label = $a->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
                 $a->end_label = $a->end_time ? Carbon::parse($a->end_time)->format('H:i') : '';
-
                 return $a;
             });
         $attendanceByDate = $attendances->keyBy(fn ($a) => Carbon::parse($a->date)->toDateString());
@@ -263,7 +258,6 @@ class AttendanceController extends Controller
         for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
             $dateStr = $d->toDateString();
             $a = $attendanceByDate->get($dateStr);
-
             $rows->push([
                 'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
                 'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',

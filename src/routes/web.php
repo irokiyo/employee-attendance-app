@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         ->name('request.update');
 });
 
+// fortifyのログイン、ログアウト関連
 Route::middleware('guest')->group(function () {
     Route::get('/login', fn () => view('user.auth.login'))->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
@@ -60,7 +61,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware('guest')->group(function () {
     Route::get('/admin/login', fn () => view('admin.login'))->name('admin.login');
 });
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
