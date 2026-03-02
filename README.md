@@ -1,4 +1,4 @@
-# employee-attendance-app
+# 勤怠アプリ
 
 ## 環境構築
 
