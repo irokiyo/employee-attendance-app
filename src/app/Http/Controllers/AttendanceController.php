@@ -69,9 +69,9 @@ class AttendanceController extends Controller
         $filledOldCount = 0;
         if (is_array($oldBreaks)) {
             $filtered = array_values(array_filter($oldBreaks, function ($b) {
-            $s = $b['break_start_time'] ?? '';
-            $e = $b['break_end_time'] ?? '';
-            return trim((string)$s) !== '' || trim((string)$e) !== '';
+                $s = $b['break_start_time'] ?? '';
+                $e = $b['break_end_time'] ?? '';
+                return trim((string)$s) !== '' || trim((string)$e) !== '';
             }));
             $filledOldCount = count($filtered);
         }
