@@ -1,4 +1,4 @@
-<nav class="header__nav">
+<nav class="user-header__nav">
     <ul class="header__nav__ul">
         <li class="nav__link"><a href="{{route('user.attendance')}}" class="nav__btn">勤怠</li>
         <li class="nav__link"><a href="{{route('user.index')}}" class="nav__btn">勤怠一覧</a></li>

@@ -4,6 +4,7 @@
 body {
     margin: 0;
 }
+/**ヘッダーの部分*/
 .header{
     display: flex;
     height: 80px;
@@ -15,7 +16,7 @@ body {
     width: 10%;
     display: flex;
 }
-.header__nav{
+.user-header__nav{
     width: 30%;
 }
 .admin-header__nav{
@@ -67,6 +68,7 @@ body {
 .logout:hover{
     text-decoration: underline;
 }
+/**ページ全体の部分*/
 .attendance-list {
     min-height: calc(100vh - 80px);
     background: #f2f2f2;
@@ -86,13 +88,6 @@ body {
     width: 100%;
     text-align: center;
 }
-.form-group {
-    text-align: left;
-    margin-bottom: 20px;
-    display: block;
-    width: 100%;
-    max-width: 100%;
-}
 .btn{
     width: 20%;
     background-color: #000000;
@@ -106,18 +101,6 @@ body {
 }
 .btn:hover {
     opacity: 0.9;
-}
-.link{
-    display: block;
-    margin-top: 15px;
-    font-size: 20px;
-    color: #0073CC;
-    text-decoration: none;
-    text-align: center;
-    width: 100%;
-}
-.link:hover {
-    text-decoration: underline;
 }
 .error-message {
     color: red;
@@ -137,19 +120,6 @@ input {
     width: 100%;
     margin-top: 10px;
 }
-.container{
-    display: flex;
-    justify-content: center;
-}
-.card{
-    background-color: #FFFFFF;
-    padding: 40px 60px;
-    border-radius: 4px;
-    text-align: center;
-    justify-content: center;
-    width: 60%;
-}
-/* 各ページ共通部分 */
 .page__title{
     font-size: 30px;
     border-left: 8px solid #000;
@@ -175,13 +145,6 @@ input {
     color: #111;
     border: none;
     background-color: transparent;
-}
-.date-character{
-    width: 20%;
-    color: #737373;
-    font-weight: bold;
-    font-size: 16px;
-    white-space: nowrap;
 }
 .attendance-table {
     background: #fff;
@@ -218,7 +181,7 @@ input {
     text-decoration: none;
 }
 @media (max-width: 768px) {
-    .header__nav{
+    .user-header__nav{
         width: 45%;
     }
     .admin-header__nav{

@@ -74,6 +74,10 @@ MAIL_FROM_NAME="${APP_NAME}"
 - phpMyAdmin: http://localhost:8080/  
 - MailHog: http://localhost:8025/  
 
-
 ## ER 図
-![ER図](attendance.drawio.png)
+![ER図](attendance.drawio.png)  
+
+## 備考
+管理者が勤怠を修正する際、直接修正ができるように実装しています。
+（LMSと機能要件の内容が異なっていたためコーチと相談の上、LMSの要件で実装しています）
+

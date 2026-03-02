@@ -1,3 +1,10 @@
+.date-character{
+    width: 20%;
+    color: #737373;
+    font-weight: bold;
+    font-size: 16px;
+    white-space: nowrap;
+}
 .month__btn{
     display: inline-flex;
     align-items: center;

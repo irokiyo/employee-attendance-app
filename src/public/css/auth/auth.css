@@ -1,0 +1,50 @@
+/**fortifyの背景のため加える*/
+body {
+    background-color: #FFFFFF;
+    margin: 0;
+}
+.container{
+    display: flex;
+    justify-content: center;
+}
+.card{
+    background-color: #FFFFFF;
+    padding: 40px 60px;
+    border-radius: 4px;
+    text-align: center;
+    justify-content: center;
+    width: 60%;
+}
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+}
+.fortify__btn{
+    width: 100%;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 26px;
+    cursor: pointer;
+    margin-top: 80px;
+}
+.fortify__btn:hover {
+    opacity: 0.9;
+}
+.link{
+    display: block;
+    margin-top: 15px;
+    font-size: 20px;
+    color: #0073CC;
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+}
+.link:hover {
+    text-decoration: underline;
+}
