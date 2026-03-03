@@ -68,8 +68,6 @@ class RequestController extends Controller
             ->first();
         $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
         $payload = $attendanceRequest->payload ?? [];
-        $reqStart = $payload['start_time'] ?? '';
-        $reqEnd = $payload['end_time'] ?? '';
         $reqStart = ! empty($payload['start_time'])
             ? Carbon::parse($payload['start_time'])->format('H:i')
             : '';
@@ -281,6 +279,34 @@ class RequestController extends Controller
                 ? Carbon::parse($break->break_end_time)->format('H:i')
                 : '';
         });
+        $attendanceRequest = AttendanceRequest::where('attendance_id', $attendance->id)
+            ->where('status', 'pending')
+            ->latest()
+            ->first();
+        $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
+        $payload = $attendanceRequest->payload ?? [];
+        $reqStart = ! empty($payload['start_time'])
+            ? Carbon::parse($payload['start_time'])->format('H:i')
+            : '';
+        $reqEnd = ! empty($payload['end_time'])
+            ? Carbon::parse($payload['end_time'])->format('H:i')
+            : '';
+        $rawBreaks = [];
+        if (isset($payload['break']) && is_array($payload['break'])) {
+            $rawBreaks = [$payload['break']];
+        } elseif (isset($payload['breaks']) && is_array($payload['breaks'])) {
+            $rawBreaks = $payload['breaks'];
+        }
+        $reqBreaks = collect($rawBreaks)->map(function ($break) {
+            return [
+                'break_start_time' => ! empty($break['break_start_time'])
+                ? Carbon::parse($break['break_start_time'])->format('H:i')
+                : '',
+                'break_end_time' => ! empty($break['break_end_time'])
+                ? Carbon::parse($break['break_end_time'])->format('H:i')
+                : '',
+            ];
+        })->toArray();
         $breaks = $attendance->breaks ?? collect();
         $oldBreaks = old('breaks', []);
         $filledOldCount = 0;
@@ -292,14 +318,21 @@ class RequestController extends Controller
             }));
             $filledOldCount = count($filtered);
         }
+        $existingCount = $breaks->count();
+        $oldCount = is_array($oldBreaks) ? count($oldBreaks) : 0;
         $displayCount = max($breaks->count(), $filledOldCount) + 1;
-        $maxBreaks = 5;
-        $displayCount = min($displayCount, $maxBreaks);
 
         return view('admin.detail.show', compact(
             'attendance',
+            'attendanceRequest',
+            'isPending',
+            'reqStart',
+            'reqEnd',
+            'reqBreaks',
             'breaks',
-            'displayCount'
+            'existingCount',
+            'displayCount',
+            'filledOldCount'
         ));
     }
 
