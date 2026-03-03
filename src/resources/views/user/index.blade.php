@@ -60,7 +60,7 @@
                         @if($row['attendance_id'])
                         <a class="detail-link" href="{{ route('user.detail', ['id' => $row['attendance_id']]) }}">詳細</a>
                         @else
-                        <a class="detail-link" href="">詳細</a>
+                        <a class="detail-link" href="{{route('user.detail.date', ['date' => $row['date']])}}">詳細</a>
                         @endif
                     </td>
                 </tr>

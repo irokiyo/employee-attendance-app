@@ -259,6 +259,7 @@ class AttendanceController extends Controller
             $dateStr = $d->toDateString();
             $a = $attendanceByDate->get($dateStr);
             $rows->push([
+                'date' => $dateStr,
                 'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
                 'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
                 'end_label' => $a?->end_time ? Carbon::parse($a->end_time)->format('H:i') : '',
@@ -275,4 +276,128 @@ class AttendanceController extends Controller
             'nextMonth' => $nextMonth,
         ]);
     }
+    //勤怠ない日の詳細画面（一般ユーザー）
+    public function userDetailByDate(string $date)
+    {
+        $targetDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $attendance = Attendance::firstOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'date'    => $targetDate->toDateString(),
+            ],
+            [
+                'start_time' => null,
+                'end_time'   => null,
+            ]
+        );
+
+        $attendanceLoaded = Attendance::with('breaks')->find($attendance->id);
+
+        $hasAnyTime =
+            !empty($attendanceLoaded->start_time) ||
+            !empty($attendanceLoaded->end_time) ||
+            ($attendanceLoaded->breaks && $attendanceLoaded->breaks->count() > 0);
+
+        if ($hasAnyTime) {
+            return redirect()->route('user.detail', ['id' => $attendanceLoaded->id]);
+        }
+
+        $attendanceRequest = AttendanceRequest::where('user_id', auth()->id())
+            ->where('attendance_id', $attendanceLoaded->id)
+            ->latest()
+            ->first();
+        $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
+        $year_label  = $targetDate->format('Y年');
+        $md_label    = $targetDate->format('n月j日');
+        $start_label = '';
+        $end_label   = '';
+        $displayBreaks = [
+            ['break_start_time' => '', 'break_end_time' => ''],
+            ['break_start_time' => '', 'break_end_time' => ''],
+        ];
+
+        return view('user.detail.holiday', compact(
+            'targetDate',
+            'attendanceLoaded',
+            'attendanceRequest',
+            'isPending',
+            'year_label',
+            'md_label',
+            'start_label',
+            'end_label',
+            'displayBreaks',
+        ));
+    }
+    //勤怠ない日の登録申請（一般ユーザー）
+    public function userRequestByDate(Request $request, string $date)
+    {
+        $targetDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $data = $request->validate([
+            'start_time' => ['nullable', 'date_format:H:i'],
+            'end_time'   => ['nullable', 'date_format:H:i'],
+            'breaks'     => ['nullable', 'array'],
+            'breaks.*.break_start_time' => ['nullable', 'date_format:H:i'],
+            'breaks.*.break_end_time'   => ['nullable', 'date_format:H:i'],
+            'reason'     => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $start = !empty($data['start_time'])
+            ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
+            : null;
+        $end = !empty($data['end_time'])
+            ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
+            : null;
+        $breaks = collect($data['breaks'] ?? [])
+            ->map(function ($b) {
+                $bs = $b['break_start_time'] ?? null;
+                $be = $b['break_end_time'] ?? null;
+
+                if (empty($bs) && empty($be)) return null;
+
+                return [
+                    'break_start_time' => !empty($bs)
+                        ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s')
+                        : null,
+                    'break_end_time' => !empty($be)
+                        ? Carbon::createFromFormat('H:i', $be)->format('H:i:s')
+                        : null,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        return DB::transaction(function () use ($targetDate, $start, $end, $breaks, $data) {
+
+            $attendance = Attendance::firstOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                    'date'    => $targetDate->toDateString(), // attendances.date がある前提
+                ],
+                [
+                    'start_time' => null,
+                    'end_time'   => null,
+                ]
+            );
+
+            $payload = [
+                'start_time' => $start,
+                'end_time'   => $end,
+                'breaks'     => $breaks,
+                'reason'     => $data['reason'],
+            ];
+
+            AttendanceRequest::create([
+                'user_id'       => auth()->id(),
+                'attendance_id' => $attendance->id,
+                'status'        => 'pending',
+                'reason'        => $data['reason'],
+                'payload'       => $payload,
+            ]);
+
+            return redirect()
+                ->route('request.index');
+        });
+    }
+
 }
