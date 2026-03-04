@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AttendanceRequestRequest;
+use App\Http\Requests\AdminRequestByDateRequest;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -118,7 +120,6 @@ class RequestController extends Controller
             'filledOldCount'
         ));
     }
-
     // 勤怠詳細の修正登録（一般ユーザー
     public function userRequest(AttendanceRequestRequest $request, $id)
     {
@@ -336,6 +337,148 @@ class RequestController extends Controller
         ));
     }
 
+    //勤怠詳細画面（管理者）※勤怠の日がない場合
+    public function adminDetailByDate($user, $date)
+    {
+        $targetDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $attendance = Attendance::firstOrCreate(
+            [
+                'user_id' => $user,
+                'date'    => $targetDate->toDateString(),
+            ],
+            [
+                'start_time' => null,
+                'end_time'   => null,
+            ]
+        );
+
+        $attendanceLoaded = Attendance::with('breaks')->find($attendance->id);
+
+        $hasAnyTime =
+            !empty($attendanceLoaded->start_time) ||
+            !empty($attendanceLoaded->end_time) ||
+            ($attendanceLoaded->breaks && $attendanceLoaded->breaks->count() > 0);
+
+        if ($hasAnyTime) {
+            return redirect()->route('admin.detail', ['id' => $attendanceLoaded->id]);
+        }
+
+        $attendanceRequest = AttendanceRequest::where('attendance_id', $attendanceLoaded->id)
+            ->latest()
+            ->first();
+        $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
+        $year_label  = $targetDate->format('Y年');
+        $md_label    = $targetDate->format('n月j日');
+        $start_label = '';
+        $end_label   = '';
+        $displayBreaks = [
+            ['break_start_time' => '', 'break_end_time' => ''],
+        ];
+        $staff = User::findOrFail($user);
+        return view('admin.detail.holiday', compact(
+            'targetDate',
+            'attendanceLoaded',
+            'attendanceRequest',
+            'isPending',
+            'year_label',
+            'md_label',
+            'start_label',
+            'end_label',
+            'displayBreaks',
+            'user',
+            'staff'
+        ));
+    }
+    //勤怠詳細の新規登録（管理者）※勤怠の日がない場合
+    public function adminRequestByDate(AdminRequestByDateRequest $request, $user, $date)
+    {
+        $data = $request->validated();
+        $targetDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $start = ! empty($data['start_time'])
+            ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
+            : null;
+        $end = ! empty($data['end_time'])
+            ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
+            : null;
+        return DB::transaction(function () use ($user, $targetDate, $data, $start, $end) {
+            $attendance = Attendance::firstOrCreate(
+            [
+                    'user_id' => $user,
+                    'date'    => $targetDate->toDateString(),
+                ],
+                [
+                    'start_time' => null,
+                    'end_time'   => null,
+                ]
+            );
+
+            $attendance->update([
+                'start_time' => $start,
+                'end_time'   => $end,
+            ]);
+            $sent = collect($data['breaks'] ?? []);
+            $keptIds = [];
+            foreach ($sent as $b) {
+                $bs = $b['break_start_time'] ?? null;
+                $be = $b['break_end_time'] ?? null;
+                if (empty($bs) && empty($be)) {
+                    continue;
+                }
+
+                $breakPayload = [
+                    'break_start_time' => ! empty($bs) ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s') : null,
+                    'break_end_time'   => ! empty($be) ? Carbon::createFromFormat('H:i', $be)->format('H:i:s') : null,
+                ];
+                $new = $attendance->breaks()->create($breakPayload);
+                $keptIds[] = $new->id;
+        }
+
+            $freshBreaks = $attendance->breaks()
+                ->orderBy('id')
+                ->get(['id', 'break_start_time', 'break_end_time'])
+                ->map(function ($br) {
+                    return [
+                        'break_id' => $br->id,
+                        'break_start_time' => $br->break_start_time
+                            ? Carbon::parse($br->break_start_time)->format('H:i:s')
+                            : null,
+                        'break_end_time' => $br->break_end_time
+                            ? Carbon::parse($br->break_end_time)->format('H:i:s')
+                            : null,
+                    ];
+                })->toArray();
+
+            $payload = [
+                'start_time' => $start,
+                'end_time'   => $end,
+                'breaks'     => $freshBreaks,
+                ];
+            $req = AttendanceRequest::where('attendance_id', $attendance->id)
+                ->where('status', 'pending')
+                ->first();
+            if ($req) {
+                $req->update([
+                    'status'      => 'approved',
+                    'payload'     => $payload,
+                    'reason'      => $data['reason'],
+                    'reviewed_by' => auth()->id(),
+                    'reviewed_at' => now(),
+                ]);
+            } else {
+                AttendanceRequest::create([
+                    'user_id'       => $attendance->user_id,
+                    'attendance_id' => $attendance->id,
+                    'break_id'      => null,
+                    'status'        => 'approved',
+                    'payload'       => $payload,
+                    'reason'        => $data['reason'],
+                    'reviewed_by'   => auth()->id(),
+                    'reviewed_at'   => now(),
+                ]);
+            }
+            return redirect()->route('request.index');
+        });
+    }
     // 勤怠詳細修正登録（管理者）
     public function adminDetailSave(AttendanceRequestRequest $request, $id)
     {

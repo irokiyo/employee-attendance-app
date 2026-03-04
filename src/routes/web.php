@@ -17,7 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance/detail/date/{date}', [AttendanceController::class, 'userDetailByDate'])
     ->where('date', '\d{4}-\d{2}-\d{2}')
     ->name('user.detail.date');
-    // 勤怠登録（一般ユーザー）※勤怠ない日の場合
+    // 勤怠新規登録（一般ユーザー）※勤怠ない日の場合
     Route::post('/attendance/request/date/{date}', [AttendanceController::class, 'userRequestByDate'])
     ->where('date', '\d{4}-\d{2}-\d{2}')
     ->name('user.request.date');
@@ -45,6 +45,10 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // 勤怠詳細画面（管理者）
     Route::get('/admin/attendance/{id}', [RequestController::class, 'adminDetail'])->name('admin.detail');
+    // 勤怠詳細画面（管理者）※勤怠の日がない場合
+    Route::get('/admin/attendance/{user}/date/{date}', [RequestController::class, 'adminDetailByDate'])->name('admin.detail.date');
+    // 勤怠詳細の新規登録（管理者）※勤怠の日がない場合
+    Route::post('/admin/attendance/{user}/date/{date}', [RequestController::class, 'adminRequestByDate'])->name('admin.request.date');
     // 勤怠詳細修正登録（管理者）
     Route::post('/admin/attendance/{id}', [RequestController::class, 'adminDetailSave'])->name('admin.detail.save');
     // 修正申請承認画面（管理者）

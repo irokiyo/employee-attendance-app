@@ -41,6 +41,8 @@
                             <span class="time__sep">〜</span>
                             <input type="text" class="input input--time" name="end_time" value="">
                         </div>
+                        </div>
+                        @error('start_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
 
                     @foreach($displayBreaks as $i => $b)
@@ -51,16 +53,20 @@
                             <span class="time__sep">〜</span>
                             <input type="text" class="input input--time" name="breaks[{{ $i }}][break_end_time]" value="">
                         </div>
+                        @error("breaks.$i.break_start_time") <p class="error-message">{{ $message }}</p> @enderror
+                        @error("breaks.$i.break_end_time") <p class="error-message">{{ $message }}</p> @enderror
                     </div>
                     @endforeach
 
                     <div class="row">
                         <div class="row__head">備考</div>
                         <div class="cell value">
-                            <input type="text" class="input" name="reason" value="{{ old('reason') }}"></textarea>
+                            <input type="text" class="input" name="reason" value="{{ old('reason') }}">
                         </div>
+                        @error('reason')
+                        <p class="error-message">{{ $message }}</p>
+                        @enderror
                     </div>
-
                 </div>
             </div>
 

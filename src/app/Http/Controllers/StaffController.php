@@ -39,6 +39,7 @@ class StaffController extends Controller
             $dateStr = $d->toDateString();
             $a = $attendanceByDate->get($dateStr);
             $rows->push([
+                'date' => $dateStr,
                 'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
                 'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
                 'end_label' => $a?->end_time ? Carbon::parse($a->end_time)->format('H:i') : '',
@@ -54,6 +55,7 @@ class StaffController extends Controller
             'prevMonth' => $prevMonth,
             'nextMonth' => $nextMonth,
             'user' => $user,
+            'userId' => $user->id,
         ]);
     }
 

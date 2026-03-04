@@ -313,9 +313,7 @@ class AttendanceController extends Controller
         $end_label   = '';
         $displayBreaks = [
             ['break_start_time' => '', 'break_end_time' => ''],
-            ['break_start_time' => '', 'break_end_time' => ''],
         ];
-
         return view('user.detail.holiday', compact(
             'targetDate',
             'attendanceLoaded',
@@ -374,7 +372,7 @@ class AttendanceController extends Controller
             $attendance = Attendance::firstOrCreate(
                 [
                     'user_id' => auth()->id(),
-                    'date'    => $targetDate->toDateString(), // attendances.date がある前提
+                    'date'    => $targetDate->toDateString(),
                 ],
                 [
                     'start_time' => null,
