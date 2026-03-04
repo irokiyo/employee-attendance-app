@@ -352,7 +352,9 @@ class AttendanceController extends Controller
                 $bs = $b['break_start_time'] ?? null;
                 $be = $b['break_end_time'] ?? null;
 
-                if (empty($bs) && empty($be)) return null;
+                if (empty($bs) && empty($be)) {
+                    return null;
+                }
 
                 return [
                     'break_start_time' => !empty($bs)
@@ -399,5 +401,4 @@ class AttendanceController extends Controller
                 ->route('request.index');
         });
     }
-
 }
