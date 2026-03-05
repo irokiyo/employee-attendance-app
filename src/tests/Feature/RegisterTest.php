@@ -21,7 +21,7 @@ class RegisterTest extends TestCase
 
     // 名前のバリデーション
     /** @test */
-    public function test_name_validation()
+    public function testNameValidation()
     {
         $response = $this->from(route('register'))
             ->post(route('register'), $this->validData([
@@ -36,7 +36,7 @@ class RegisterTest extends TestCase
     }
 
     // メールアドレスのバリデーション
-    public function test_email_validation()
+    public function testEmailValidation()
     {
         $response = $this->from(route('register'))
             ->post(route('register'), $this->validData([
@@ -51,7 +51,7 @@ class RegisterTest extends TestCase
     }
 
     // パスワードのバリデーション
-    public function test_password_validation()
+    public function testPasswordValidation()
     {
         $response = $this->from(route('register'))
             ->post(route('register'), $this->validData([
@@ -66,7 +66,7 @@ class RegisterTest extends TestCase
     }
 
     // パスワードの8文字以下のバリデーション
-    public function test_password_short_validation()
+    public function testPasswordShortValidation()
     {
         $response = $this->from(route('register'))
             ->post(route('register'), $this->validData([
@@ -82,7 +82,7 @@ class RegisterTest extends TestCase
     }
 
     // パスワードと確認パスワードの不一致のバリデーション
-    public function test_password_mismatch_validation()
+    public function testPasswordMismatchValidation()
     {
         $response = $this->from(route('register'))
             ->post(route('register'), $this->validData([
@@ -98,7 +98,7 @@ class RegisterTest extends TestCase
     }
 
     /** フォームに内容が入力されていた場合、データが正常に保存される */
-    public function test_register_success_saves_user(): void
+    public function testRegisterSuccessSavesUser(): void
     {
         $response = $this->post(route('register'), [
             'name' => 'テスト太郎',
