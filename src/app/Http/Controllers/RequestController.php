@@ -402,7 +402,7 @@ class RequestController extends Controller
             : null;
         return DB::transaction(function () use ($user, $targetDate, $data, $start, $end) {
             $attendance = Attendance::firstOrCreate(
-            [
+                [
                     'user_id' => $user,
                     'date'    => $targetDate->toDateString(),
                 ],
@@ -431,7 +431,7 @@ class RequestController extends Controller
                 ];
                 $new = $attendance->breaks()->create($breakPayload);
                 $keptIds[] = $new->id;
-        }
+            }
 
             $freshBreaks = $attendance->breaks()
                 ->orderBy('id')
