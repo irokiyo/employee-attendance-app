@@ -41,7 +41,6 @@
                             <span class="time__sep">〜</span>
                             <input type="text" class="input input--time" name="end_time" value="">
                         </div>
-                        </div>
                         @error('start_time') <p class="error-message">{{ $message }}</p> @enderror
                     </div>
 

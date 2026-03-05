@@ -47,12 +47,14 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/attendance/{id}', [RequestController::class, 'adminDetail'])->name('admin.detail');
     // 勤怠詳細画面（管理者）※勤怠の日がない場合
     Route::get(
-        '/admin/attendance/{user}/date/{date}', [RequestController::class, 'adminDetailByDate']
-        )->name('admin.detail.date');
+        '/admin/attendance/{user}/date/{date}',
+        [RequestController::class, 'adminDetailByDate']
+    )->name('admin.detail.date');
     // 勤怠詳細の新規登録（管理者）※勤怠の日がない場合
     Route::post(
-        '/admin/attendance/{user}/date/{date}', [RequestController::class, 'adminRequestByDate']
-        )->name('admin.request.date');
+        '/admin/attendance/{user}/date/{date}',
+        [RequestController::class, 'adminRequestByDate']
+    )->name('admin.request.date');
     // 勤怠詳細修正登録（管理者）
     Route::post('/admin/attendance/{id}', [RequestController::class, 'adminDetailSave'])->name('admin.detail.save');
     // 修正申請承認画面（管理者）
