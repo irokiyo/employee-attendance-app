@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminRequestByDateRequest;
 use App\Http\Requests\AttendanceRequestRequest;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
@@ -71,7 +72,8 @@ class AttendanceController extends Controller
             $filtered = array_values(array_filter($oldBreaks, function ($b) {
                 $s = $b['break_start_time'] ?? '';
                 $e = $b['break_end_time'] ?? '';
-                return trim((string)$s) !== '' || trim((string)$e) !== '';
+
+                return trim((string) $s) !== '' || trim((string) $e) !== '';
             }));
             $filledOldCount = count($filtered);
         }
@@ -131,11 +133,9 @@ class AttendanceController extends Controller
                 ->map(function ($br) {
                     return [
                         'break_id' => $br->id,
-                        'break_start_time'
-                            => $br->break_start_time ? Carbon::parse($br->break_start_time)
+                        'break_start_time' => $br->break_start_time ? Carbon::parse($br->break_start_time)
                             ->format('H:i:s') : null,
-                        'break_end_time'
-                            => $br->break_end_time ? Carbon::parse($br->break_end_time)
+                        'break_end_time' => $br->break_end_time ? Carbon::parse($br->break_end_time)
                             ->format('H:i:s') : null,
                     ];
                 })->toArray();
@@ -210,6 +210,7 @@ class AttendanceController extends Controller
                 }
                 $attendance->update(['end_time' => now()->format('H:i:s')]);
             }
+
             return redirect()->route('user.attendance');
         }
         if (! $attendance) {
@@ -248,9 +249,10 @@ class AttendanceController extends Controller
             ->get()
             ->map(function ($a) use ($weekdays) {
                 $d = Carbon::parse($a->date);
-                $a->date_label = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
+                $a->date_label = $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')';
                 $a->start_label = $a->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
                 $a->end_label = $a->end_time ? Carbon::parse($a->end_time)->format('H:i') : '';
+
                 return $a;
             });
         $attendanceByDate = $attendances->keyBy(fn ($a) => Carbon::parse($a->date)->toDateString());
@@ -260,7 +262,7 @@ class AttendanceController extends Controller
             $a = $attendanceByDate->get($dateStr);
             $rows->push([
                 'date' => $dateStr,
-                'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
+                'date_label' => $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')',
                 'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
                 'end_label' => $a?->end_time ? Carbon::parse($a->end_time)->format('H:i') : '',
                 'total_break_time' => $a->total_break_time ?? '',
@@ -276,26 +278,27 @@ class AttendanceController extends Controller
             'nextMonth' => $nextMonth,
         ]);
     }
-    //勤怠ない日の詳細画面（一般ユーザー）
-    public function userDetailByDate(string $date)
+
+    // 勤怠ない日の詳細画面（一般ユーザー）
+    public function userDetailByDate($date)
     {
         $targetDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
         $attendance = Attendance::firstOrCreate(
             [
                 'user_id' => auth()->id(),
-                'date'    => $targetDate->toDateString(),
+                'date' => $targetDate->toDateString(),
             ],
             [
                 'start_time' => null,
-                'end_time'   => null,
+                'end_time' => null,
             ]
         );
 
         $attendanceLoaded = Attendance::with('breaks')->find($attendance->id);
 
         $hasAnyTime =
-            !empty($attendanceLoaded->start_time) ||
-            !empty($attendanceLoaded->end_time) ||
+            ! empty($attendanceLoaded->start_time) ||
+            ! empty($attendanceLoaded->end_time) ||
             ($attendanceLoaded->breaks && $attendanceLoaded->breaks->count() > 0);
 
         if ($hasAnyTime) {
@@ -307,13 +310,14 @@ class AttendanceController extends Controller
             ->latest()
             ->first();
         $isPending = $attendanceRequest && $attendanceRequest->status === 'pending';
-        $year_label  = $targetDate->format('Y年');
-        $md_label    = $targetDate->format('n月j日');
+        $year_label = $targetDate->format('Y年');
+        $md_label = $targetDate->format('n月j日');
         $start_label = '';
-        $end_label   = '';
+        $end_label = '';
         $displayBreaks = [
             ['break_start_time' => '', 'break_end_time' => ''],
         ];
+
         return view('user.detail.holiday', compact(
             'targetDate',
             'attendanceLoaded',
@@ -326,23 +330,16 @@ class AttendanceController extends Controller
             'displayBreaks',
         ));
     }
-    //勤怠ない日の登録申請（一般ユーザー）
-    public function userRequestByDate(Request $request, string $date)
+
+    // 勤怠ない日の登録申請（一般ユーザー）
+    public function userRequestByDate(AdminRequestByDateRequest $request, $date)
     {
         $targetDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
-        $data = $request->validate([
-            'start_time' => ['nullable', 'date_format:H:i'],
-            'end_time'   => ['nullable', 'date_format:H:i'],
-            'breaks'     => ['nullable', 'array'],
-            'breaks.*.break_start_time' => ['nullable', 'date_format:H:i'],
-            'breaks.*.break_end_time'   => ['nullable', 'date_format:H:i'],
-            'reason'     => ['nullable', 'string', 'max:1000'],
-        ]);
-
-        $start = !empty($data['start_time'])
+        $data = $request->validated();
+        $start = ! empty($data['start_time'])
             ? Carbon::createFromFormat('H:i', $data['start_time'])->format('H:i:s')
             : null;
-        $end = !empty($data['end_time'])
+        $end = ! empty($data['end_time'])
             ? Carbon::createFromFormat('H:i', $data['end_time'])->format('H:i:s')
             : null;
         $breaks = collect($data['breaks'] ?? [])
@@ -355,10 +352,10 @@ class AttendanceController extends Controller
                 }
 
                 return [
-                    'break_start_time' => !empty($bs)
+                    'break_start_time' => ! empty($bs)
                         ? Carbon::createFromFormat('H:i', $bs)->format('H:i:s')
                         : null,
-                    'break_end_time' => !empty($be)
+                    'break_end_time' => ! empty($be)
                         ? Carbon::createFromFormat('H:i', $be)->format('H:i:s')
                         : null,
                 ];
@@ -372,27 +369,27 @@ class AttendanceController extends Controller
             $attendance = Attendance::firstOrCreate(
                 [
                     'user_id' => auth()->id(),
-                    'date'    => $targetDate->toDateString(),
+                    'date' => $targetDate->toDateString(),
                 ],
                 [
                     'start_time' => null,
-                    'end_time'   => null,
+                    'end_time' => null,
                 ]
             );
 
             $payload = [
                 'start_time' => $start,
-                'end_time'   => $end,
-                'breaks'     => $breaks,
-                'reason'     => $data['reason'],
+                'end_time' => $end,
+                'breaks' => $breaks,
+                'reason' => $data['reason'],
             ];
 
             AttendanceRequest::create([
-                'user_id'       => auth()->id(),
+                'user_id' => auth()->id(),
                 'attendance_id' => $attendance->id,
-                'status'        => 'pending',
-                'reason'        => $data['reason'],
-                'payload'       => $payload,
+                'status' => 'pending',
+                'reason' => $data['reason'],
+                'payload' => $payload,
             ]);
 
             return redirect()

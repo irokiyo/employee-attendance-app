@@ -16,10 +16,10 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Contracts\VerifyEmailResponse;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
-use Laravel\Fortify\Contracts\RegisterResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -89,7 +89,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });

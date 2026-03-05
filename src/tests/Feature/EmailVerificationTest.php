@@ -14,7 +14,7 @@ class EmailVerificationTest extends TestCase
     use RefreshDatabase;
 
     // 会員登録後、認証メールが送信される
-    public function testEmailSentRegistration(): void
+    public function test_email_sent_registration(): void
     {
         Notification::fake();
 
@@ -32,7 +32,7 @@ class EmailVerificationTest extends TestCase
     }
 
     // メール認証誘導画面で「認証はこちらから」ボタンを押下するとメール認証サイトに遷移する
-    public function testVerificationEmailAthenticationSite(): void
+    public function test_verification_email_athentication_site(): void
     {
         config(['app.env' => 'local']);
 
@@ -47,7 +47,7 @@ class EmailVerificationTest extends TestCase
     }
 
     // 認証リンクにアクセスすると認証完了し、勤怠登録画面へ遷移する
-    public function testEmailRedirectsLink(): void
+    public function test_email_redirects_link(): void
     {
         $user = User::factory()->unverified()->create();
 

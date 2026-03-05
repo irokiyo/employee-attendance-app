@@ -26,14 +26,26 @@ class AdminRequestByDateRequest extends FormRequest
     public function rules()
     {
         return [
-            'reason' => ['required'], // 備考を必須にしたいならこのまま
+            'reason' => ['required'],
             'start_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
-            'end_time'   => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
+            'end_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
             'breaks' => ['nullable', 'array'],
             'breaks.*.break_start_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
-            'breaks.*.break_end_time'   => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
+            'breaks.*.break_end_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/', 'date_format:H:i'],
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'reason.required' => '備考を記入してください',
+            'start_time.regex' => '時間は00:00形式で入力してください',
+            'end_time.regex' => '時間は00:00形式で入力してください',
+            'breaks.*.break_start_time.regex' => '時間は00:00形式で入力してください',
+            'breaks.*.break_end_time.regex' => '時間は00:00形式で入力してください',
+        ];
+    }
+
     public function withValidator(Validator $validator)
     {
         $validator->after(function ($validator) {

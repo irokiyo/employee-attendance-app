@@ -24,7 +24,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 承認待ちの修正申請が全て表示されている */
-    public function testPendingShowsAllPendingRequests(): void
+    public function test_pending_shows_all_pending_requests(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -69,7 +69,7 @@ class AdminAttendanceEditTest extends TestCase
             'reviewed_at' => null,
         ]);
 
-        $res = $this->actingAs($admin)->get($this->requestListPath . '?status=pending');
+        $res = $this->actingAs($admin)->get($this->requestListPath.'?status=pending');
         $res->assertStatus(200);
 
         $res->assertSeeText($userA->name);
@@ -79,7 +79,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 承認済みの修正申請が全て表示されている */
-    public function testApprovedShowsAllApprovedRequests(): void
+    public function test_approved_shows_all_approved_requests(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -104,7 +104,7 @@ class AdminAttendanceEditTest extends TestCase
             'reviewed_at' => now(),
         ]);
 
-        $res = $this->actingAs($admin)->get($this->requestListPath . '?status=approved');
+        $res = $this->actingAs($admin)->get($this->requestListPath.'?status=approved');
         $res->assertStatus(200);
 
         $res->assertSeeText($user->name);
@@ -112,7 +112,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 修正申請の詳細内容が正しく表示されている */
-    public function testRequestDetailContentsAreDisplayedCorrectly(): void
+    public function test_request_detail_contents_are_displayed_correctly(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 
@@ -146,7 +146,7 @@ class AdminAttendanceEditTest extends TestCase
         $list = $this->actingAs($admin)->get('/stamp_correction_request/list?status=pending');
         $list->assertStatus(200);
         $list->assertSee(
-            'href="' . route('admin.request.show', ['attendance_correct_request_id' => $req->id]) . '"',
+            'href="'.route('admin.request.show', ['attendance_correct_request_id' => $req->id]).'"',
             false
         );
 
@@ -161,7 +161,7 @@ class AdminAttendanceEditTest extends TestCase
     }
 
     /** 修正申請の承認処理が正しく行われる */
-    public function testApproveRequestUpdatesAttendance(): void
+    public function test_approve_request_updates_attendance(): void
     {
         Carbon::setTestNow('2026-01-29 10:00:00');
 

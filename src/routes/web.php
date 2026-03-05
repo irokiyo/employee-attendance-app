@@ -15,12 +15,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance/list', [AttendanceController::class, 'userIndex'])->name('user.index');
     // 勤怠詳細画面（一般ユーザー）※勤怠ない日の場合
     Route::get('/attendance/detail/date/{date}', [AttendanceController::class, 'userDetailByDate'])
-    ->where('date', '\d{4}-\d{2}-\d{2}')
-    ->name('user.detail.date');
+        ->where('date', '\d{4}-\d{2}-\d{2}')
+        ->name('user.detail.date');
     // 勤怠新規登録（一般ユーザー）※勤怠ない日の場合
     Route::post('/attendance/request/date/{date}', [AttendanceController::class, 'userRequestByDate'])
-    ->where('date', '\d{4}-\d{2}-\d{2}')
-    ->name('user.request.date');
+        ->where('date', '\d{4}-\d{2}-\d{2}')
+        ->name('user.request.date');
 
     // 申請一覧画面（管理者）（一般ユーザー）
     Route::get('/stamp_correction_request/list', [RequestController::class, 'requestIndex'])->name('request.index');
