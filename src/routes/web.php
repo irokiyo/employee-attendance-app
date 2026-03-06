@@ -13,26 +13,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/attendance', [AttendanceController::class, 'userAttendance'])->name('user.attendance');
     // 勤怠一覧画面（一般ユーザー）
     Route::get('/attendance/list', [AttendanceController::class, 'userIndex'])->name('user.index');
+    // 勤怠詳細画面（一般ユーザー）
+    Route::get('/attendance/detail/{id}', [AttendanceController::class, 'userDetail'])->name('user.detail');
     // 勤怠詳細画面（一般ユーザー）※勤怠ない日の場合
     Route::get('/attendance/detail/date/{date}', [AttendanceController::class, 'userDetailByDate'])
         ->where('date', '\d{4}-\d{2}-\d{2}')
         ->name('user.detail.date');
-    // 勤怠新規登録（一般ユーザー）※勤怠ない日の場合
-    Route::post('/attendance/request/date/{date}', [AttendanceController::class, 'userRequestByDate'])
-        ->where('date', '\d{4}-\d{2}-\d{2}')
-        ->name('user.request.date');
 
     // 申請一覧画面（管理者）（一般ユーザー）
     Route::get('/stamp_correction_request/list', [RequestController::class, 'requestIndex'])->name('request.index');
-    // 勤怠詳細画面（一般ユーザー）
-    Route::get('/attendance/detail/{id}', [RequestController::class, 'userDetail'])->name('user.detail');
     // 勤怠詳細の修正登録（一般ユーザー）
     Route::post('/attendance/detail/{id}', [RequestController::class, 'userRequest'])->name('user.request');
+    // 勤怠新規登録（一般ユーザー）※勤怠ない日の場合
+    Route::post('/attendance/request/date/{date}', [RequestController::class, 'userRequestByDate'])
+        ->where('date', '\d{4}-\d{2}-\d{2}')
+        ->name('user.request.date');
 });
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // 勤怠一覧画面（管理者）
     Route::get('/admin/attendance/list', [AttendanceController::class, 'adminIndex'])->name('admin.index');
+    // 勤怠詳細画面（管理者）
+    Route::get('/admin/attendance/{id}', [AttendanceController::class, 'adminDetail'])->name('admin.detail');
+    // 勤怠詳細画面（管理者）※勤怠の日がない場合
+    Route::get(
+        '/admin/attendance/{user}/date/{date}',
+        [AttendanceController::class, 'adminDetailByDate']
+    )->name('admin.detail.date');
 
     // スタッフ一覧画面（管理者）
     Route::get('/admin/staff/list', [StaffController::class, 'adminStaffIndex'])->name('admin.staff.index');
@@ -43,13 +50,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/attendance/staff/{id}/csv', [StaffController::class, 'exportCsv'])
         ->name('admin.attendance.csv');
 
-    // 勤怠詳細画面（管理者）
-    Route::get('/admin/attendance/{id}', [RequestController::class, 'adminDetail'])->name('admin.detail');
-    // 勤怠詳細画面（管理者）※勤怠の日がない場合
-    Route::get(
-        '/admin/attendance/{user}/date/{date}',
-        [RequestController::class, 'adminDetailByDate']
-    )->name('admin.detail.date');
     // 勤怠詳細の新規登録（管理者）※勤怠の日がない場合
     Route::post(
         '/admin/attendance/{user}/date/{date}',
