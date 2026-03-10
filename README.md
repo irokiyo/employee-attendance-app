@@ -25,6 +25,7 @@
 1. php artisan key:generate  
 1. php artisan migrate:fresh  
 1. php artisan db:seed  
+1. php artisan test  
 
 ## メール認証(MailHog)
 メール認証はMailHogを使用しています  
@@ -78,9 +79,10 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ## 備考
 指定された以外に以下のルートルートパスを作成しています。  
+基本設計書にも追加させていただいています。
 
-| 画面名称                              | パス                                | メソッド | ルート先コントローラー   | アクション         |
-| ------------------------------------| ------------------------------------| --------| ---------------------| -----------------|
-|  出勤のない日の勤怠詳細画面（一般ユーザー）| /attendance/detail/date/{date}      | GET     | AttendanceController | userDetailByDate |
-|  出勤のない日の勤怠詳細画面（管理者）     | /admin/attendance/{user}/date/{date}| GET     | AttendanceController | adminDetailByDate|
+| 画面名称                              | パス                                |
+| ------------------------------------| ------------------------------------|
+|  出勤のない日の勤怠詳細画面（一般ユーザー）| /attendance/detail/date/{date}      |
+|  出勤のない日の勤怠詳細画面（管理者）     | /admin/attendance/{user}/date/{date}|
 
