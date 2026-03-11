@@ -130,7 +130,7 @@ class AdminStaffInfoTest extends TestCase
             'month' => '2026-01',
         ]));
         $list->assertStatus(200);
-        $list->assertSee('/admin/attendance/'.$attendance->id);
+        $list->assertSee('/admin/attendance/' . $attendance->id);
 
         $detail = $this->actingAs($admin)->get(route('admin.detail', $attendance->id));
         $detail->assertStatus(200);

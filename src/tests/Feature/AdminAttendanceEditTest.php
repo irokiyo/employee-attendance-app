@@ -69,7 +69,7 @@ class AdminAttendanceEditTest extends TestCase
             'reviewed_at' => null,
         ]);
 
-        $res = $this->actingAs($admin)->get($this->requestListPath.'?status=pending');
+        $res = $this->actingAs($admin)->get($this->requestListPath . '?status=pending');
         $res->assertStatus(200);
 
         $res->assertSeeText($userA->name);
@@ -104,7 +104,7 @@ class AdminAttendanceEditTest extends TestCase
             'reviewed_at' => now(),
         ]);
 
-        $res = $this->actingAs($admin)->get($this->requestListPath.'?status=approved');
+        $res = $this->actingAs($admin)->get($this->requestListPath . '?status=approved');
         $res->assertStatus(200);
 
         $res->assertSeeText($user->name);
@@ -146,7 +146,7 @@ class AdminAttendanceEditTest extends TestCase
         $list = $this->actingAs($admin)->get('/stamp_correction_request/list?status=pending');
         $list->assertStatus(200);
         $list->assertSee(
-            'href="'.route('admin.request.show', ['attendance_correct_request_id' => $req->id]).'"',
+            'href="' . route('admin.request.show', ['attendance_correct_request_id' => $req->id]) . '"',
             false
         );
 
