@@ -153,6 +153,7 @@ class RequestController extends Controller
             'displayBreaks'
         ));
     }
+
     // 勤怠ない日の登録申請（一般ユーザー）
     public function userRequestByDate(AdminRequestByDateRequest $request, $date)
     {
@@ -249,6 +250,7 @@ class RequestController extends Controller
 
         return redirect()->route('request.index');
     }
+
     // 勤怠詳細修正登録（管理者）
     public function adminDetailSave(AttendanceRequestRequest $request, $id)
     {

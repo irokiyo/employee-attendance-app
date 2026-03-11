@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AttendanceRequestRequest;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Models\BreakTime;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -254,7 +252,7 @@ class AttendanceController extends Controller
             ->get()
             ->map(function ($a) use ($weekdays) {
                 $d = Carbon::parse($a->date);
-                $a->date_label = $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')';
+                $a->date_label = $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')';
                 $a->start_label = $a->start_time ? Carbon::parse($a->start_time)->format('H:i') : '';
                 $a->end_label = $a->end_time ? Carbon::parse($a->end_time)->format('H:i') : '';
 
@@ -267,7 +265,7 @@ class AttendanceController extends Controller
             $a = $attendanceByDate->get($dateStr);
             $rows->push([
                 'date' => $dateStr,
-                'date_label' => $d->format('m/d') . '(' . $weekdays[$d->dayOfWeek] . ')',
+                'date_label' => $d->format('m/d').'('.$weekdays[$d->dayOfWeek].')',
                 'start_label' => $a?->start_time ? Carbon::parse($a->start_time)->format('H:i') : '',
                 'end_label' => $a?->end_time ? Carbon::parse($a->end_time)->format('H:i') : '',
                 'total_break_time' => $a->total_break_time ?? '',
@@ -283,6 +281,7 @@ class AttendanceController extends Controller
             'nextMonth' => $nextMonth,
         ]);
     }
+
     // 勤怠詳細画面（一般ユーザー）
     public function userDetail($id)
     {
