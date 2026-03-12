@@ -48,3 +48,11 @@ body {
 .link:hover {
     text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+    .card {
+        width: 90%;
+        max-width: none;
+        padding: 30px 20px;
+    }
+}
