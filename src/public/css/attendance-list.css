@@ -94,3 +94,12 @@
 .csv-btn:hover {
     opacity: 0.9;
 }
+
+@media (max-width: 768px) {
+    .csv-btn{
+        width: 30%;
+        font-size: 15px;
+        padding: 10px 15px;
+    }
+
+}
