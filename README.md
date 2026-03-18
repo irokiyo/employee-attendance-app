@@ -25,6 +25,11 @@
 1. php artisan key:generate  
 1. php artisan migrate:fresh  
 1. php artisan db:seed  
+## テスト用データベース作成
+テスト実行にはテスト用データベースが必要になるため以下のデータベースを作成してください  
+```sql
+CREATE DATABASE laravel_test_db;
+```
 1. php artisan test  
 
 ## メール認証(MailHog)
@@ -77,12 +82,11 @@ MAIL_FROM_NAME="${APP_NAME}"
 ## ER 図
 ![ER図](attendance.drawio.png)  
 
-## 備考
-指定された以外に以下のルートルートパスを作成しています。  
-基本設計書にも追加させていただいています。
+## テーブル
 
-| 画面名称                              | パス                                |
-| ------------------------------------| ------------------------------------|
-|  出勤のない日の勤怠詳細画面（一般ユーザー）| /attendance/detail/date/{date}      |
-|  出勤のない日の勤怠詳細画面（管理者）     | /admin/attendance/{user}/date/{date}|
+usersテーブル
+| カラム名   |  型              |primary key  |unique key  |not null  |foreign key  |
+| --------- | ----------------|-------------|------------|----------|-------------|
+| id        | bigint unsigned |⚪︎           |             |⚪︎       　|             |
+|                出勤のない日の勤怠詳細画面（管理者）     | /admin/attendance/{user}/date/{date}|
 
