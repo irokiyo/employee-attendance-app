@@ -1,4 +1,6 @@
 # 勤怠アプリ
+本アプリは、ユーザーの出退勤・休憩・勤怠修正申請を管理する勤怠管理アプリです。  
+一般ユーザーと管理者で機能が分かれており、管理者は申請の承認・修正が可能です。
 
 ## 環境構築
 
@@ -14,18 +16,18 @@
 1. cp .env.example .env  
 1. .env ファイルの一部を以下のように編集
 ```
-    DB_CONNECTION=mysql  
-    DB_HOST=mysql  
-    DB_PORT=3306  
-    DB_DATABASE=laravel_db  
-    DB_USERNAME=laravel_user  
-    DB_PASSWORD=laravel_pass  
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
 ```
 6. docker-compose exec php bash  
 1. php artisan key:generate  
 1. php artisan migrate:fresh  
 1. php artisan db:seed  
-## テスト用データベース作成
+### テスト用データベース作成
 テスト実行にはテスト用データベースが必要になるため以下のデータベースを作成してください  
 ```sql
 CREATE DATABASE laravel_test_db;
