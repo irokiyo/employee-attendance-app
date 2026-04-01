@@ -48,14 +48,14 @@ CREATE DATABASE laravel_test_db;
 
 1. .envに以下を追加する
 ```
-MAIL_MAILER=smtp  
-MAIL_HOST=mailhog  
-MAIL_PORT=1025  
-MAIL_USERNAME=null  
-MAIL_PASSWORD=null  
-MAIL_ENCRYPTION=null  
-MAIL_FROM_ADDRESS=test@example.com  
-MAIL_FROM_NAME="${APP_NAME}"  
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=test@example.com
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 1. docker-compose down
 1. docker-compose up -d
